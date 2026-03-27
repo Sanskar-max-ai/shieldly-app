@@ -50,8 +50,9 @@ function generateFallbackPriority(issues: ScanIssue[]): string {
 }
 
 export async function POST(req: NextRequest) {
+  let body: AIExplainRequest | undefined;
   try {
-    const body = await req.json() as AIExplainRequest
+    body = await req.json() as AIExplainRequest
     const { issues, url, scanType } = body
 
     if (!issues || issues.length === 0) {
@@ -152,11 +153,12 @@ Respond in valid JSON with this exact structure:
 
   } catch (err) {
     console.error('AI explain error:', err)
-    // Return fallback — don't fail the whole scan
+    // Return the original issues as fallback instead of empty array
+    // This ensures results are visible even if AI is down
     return NextResponse.json({
-      enrichedIssues: [],
-      executiveSummary: '',
-      priorityGuide: '',
+      enrichedIssues: body?.issues || [],
+      executiveSummary: body?.issues ? generateFallbackSummary(body.issues, body.url || '') : '',
+      priorityGuide: body?.issues ? generateFallbackPriority(body.issues) : '',
       aiModel: 'fallback-error',
     })
   }

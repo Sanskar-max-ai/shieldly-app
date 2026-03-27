@@ -426,7 +426,7 @@ export async function POST(req: NextRequest) {
       url,
       scanType: 'website',
       status: 'completed',
-      score,
+      score: calculateScore(enrichedIssues),
       issues: enrichedIssues,
       executiveSummary,
       aiPriority,
