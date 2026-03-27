@@ -51,10 +51,8 @@ export default function SignupPage() {
       setError(error.message)
       setLoading(false)
     } else {
-      setSuccess('Check your email to verify your account!')
-      setLoading(false)
-      // For development w/o email, fake the redirect:
-      // router.push('/dashboard')
+      // With email confirmation disabled, the user is instantly logged in
+      router.push('/dashboard')
     }
   }
 

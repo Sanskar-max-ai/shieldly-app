@@ -25,9 +25,12 @@ export default function NewScanPage() {
       })
       const data = await res.json()
       
-      // Since we haven't built the detailed report view yet, just go back to dashboard
-      // where the stats will eventually update.
-      router.push('/dashboard')
+      // Redirect directly to the newly generated detailed scan report
+      if (data && data.id) {
+        router.push(`/dashboard/scan/${data.id}`)
+      } else {
+        router.push('/dashboard')
+      }
     } catch (err) {
       console.error(err)
       setLoading(false)
