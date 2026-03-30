@@ -52,7 +52,7 @@ export default async function ScanReportPage({ params }: { params: Promise<{ id:
 
   return (
     <div className="animate-fade-up max-w-5xl mx-auto pb-12">
-      <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm text-[var(--shield-text)] hover:text-white transition-colors mb-6">
+      <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm text-[var(--zynth-text)] hover:text-white transition-colors mb-6">
         <ArrowLeft size={16} /> Back to Overview
       </Link>
 
@@ -62,11 +62,11 @@ export default async function ScanReportPage({ params }: { params: Promise<{ id:
           <div>
             <div className="flex items-center gap-3 mb-2">
               <h1 className="text-3xl font-black">{scan.url}</h1>
-              <a href={scan.url} target="_blank" rel="noopener noreferrer" className="text-[var(--shield-text)] hover:text-[#00ff88]">
+              <a href={scan.url} target="_blank" rel="noopener noreferrer" className="text-[var(--zynth-text)] hover:text-[#00ff88]">
                 <ExternalLink size={18} />
               </a>
             </div>
-            <div className="flex items-center gap-4 text-sm font-medium text-[var(--shield-text)] whitespace-nowrap">
+            <div className="flex items-center gap-4 text-sm font-medium text-[var(--zynth-text)] whitespace-nowrap">
               <span className="flex items-center gap-1"><Clock size={14} /> {new Date(scan.started_at).toLocaleString()}</span>
               <span>•</span>
               <span className="uppercase text-white text-xs px-2 py-0.5 rounded bg-white/10">{scan.scan_type} Audit</span>
@@ -75,12 +75,12 @@ export default async function ScanReportPage({ params }: { params: Promise<{ id:
 
           <div className="flex items-center gap-6 shrink-0 bg-[#060b14] p-4 rounded-xl border border-white/5">
             <div>
-              <div className="text-xs uppercase tracking-wider text-[var(--shield-text)] font-bold mb-1">Security Score</div>
+              <div className="text-xs uppercase tracking-wider text-[var(--zynth-text)] font-bold mb-1">Security Score</div>
               <div className="text-4xl font-black" style={{ color: scoreColor }}>{scan.score}<span className="text-xl">/100</span></div>
             </div>
             <div className="w-px h-12 bg-white/10" />
             <div>
-              <div className="text-xs uppercase tracking-wider text-[var(--shield-text)] font-bold mb-1">Total Issues</div>
+              <div className="text-xs uppercase tracking-wider text-[var(--zynth-text)] font-bold mb-1">Total Issues</div>
               <div className="text-3xl font-bold text-white">{scan.scan_issues.length}</div>
             </div>
           </div>
@@ -89,7 +89,7 @@ export default async function ScanReportPage({ params }: { params: Promise<{ id:
         {/* Executive Summary */}
         <div className="mt-8 p-5 rounded-lg bg-gradient-to-br from-white/5 to-transparent border border-white/5">
           <h3 className="font-bold flex items-center gap-2 mb-2"><Info size={16} className="text-[#00ff88]" /> Executive Summary</h3>
-          <p className="text-sm leading-relaxed text-[var(--shield-text)]">
+          <p className="text-sm leading-relaxed text-[var(--zynth-text)]">
             {scan.executive_summary || "Automated scan completed. Review the security findings below."}
           </p>
         </div>

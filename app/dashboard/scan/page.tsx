@@ -41,7 +41,7 @@ export default function NewScanPage() {
     <div className="max-w-3xl mx-auto py-8 animate-fade-up">
       <div className="mb-8">
         <h1 className="text-3xl font-black mb-2">Run New Audit</h1>
-        <p style={{ color: 'var(--shield-text)' }}>
+        <p style={{ color: 'var(--zynth-text)' }}>
           Enter any domain below to run a comprehensive security and vulnerability audit.
         </p>
       </div>
@@ -81,7 +81,7 @@ export default function NewScanPage() {
         <div className="p-6 rounded-xl bg-white/5 border border-white/5">
           <ShieldAlert className="mb-4 text-[#00ff88]" size={28} />
           <h3 className="font-bold mb-2">What happens during an audit?</h3>
-          <ul className="text-sm space-y-2" style={{ color: 'var(--shield-text)' }}>
+          <ul className="text-sm space-y-2" style={{ color: 'var(--zynth-text)' }}>
             <li>• Testing Data Privacy & Encryption</li>
             <li>• Verifying Anti-Hacking Shields</li>
             <li>• Hunting for Data Leaks & Exposures</li>
@@ -91,7 +91,7 @@ export default function NewScanPage() {
         
         <div className="p-6 rounded-xl bg-white/5 border border-white/5">
           <h3 className="font-bold mb-2">Notice on Authorization</h3>
-          <p className="text-sm" style={{ color: 'var(--shield-text)' }}>
+          <p className="text-sm" style={{ color: 'var(--zynth-text)' }}>
             Only audit domains that you own or have explicit authorization to audit. 
             All audits are completely passive and will not disrupt target web active services.
           </p>

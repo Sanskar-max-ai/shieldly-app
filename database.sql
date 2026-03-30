@@ -1,5 +1,5 @@
 -- ==============================================================================
--- SHIELDLY — Supabase Database Schema
+-- ZYNTH — Supabase Database Schema
 -- Paste this entire file into the Supabase SQL Editor and click "Run"
 -- ==============================================================================
 

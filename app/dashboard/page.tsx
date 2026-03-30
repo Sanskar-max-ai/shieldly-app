@@ -23,7 +23,7 @@ export default async function DashboardOverview() {
       <header className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-black mb-1">Security Dashboard</h1>
-          <p className="text-sm" style={{ color: 'var(--shield-text)' }}>Overview of your web properties and recent scans.</p>
+          <p className="text-sm" style={{ color: 'var(--zynth-text)' }}>Overview of your web properties and recent scans.</p>
         </div>
         <Link href="/dashboard/scan" className="btn-primary px-4 py-2 text-sm flex items-center gap-2">
           <Plus size={16} /> New Scan
@@ -34,7 +34,7 @@ export default async function DashboardOverview() {
       <div className="grid md:grid-cols-3 gap-6 mb-8">
         <div className="card p-6 flex items-center justify-between">
           <div>
-            <div className="text-xs font-semibold mb-1 uppercase tracking-wider" style={{ color: 'var(--shield-text)' }}>Latest Score</div>
+            <div className="text-xs font-semibold mb-1 uppercase tracking-wider" style={{ color: 'var(--zynth-text)' }}>Latest Score</div>
             <div className="text-4xl font-black" style={{ color: scoreColor }}>
               {hasScans ? latestScan.score : '--'}<span className="text-lg">/100</span>
             </div>
@@ -46,7 +46,7 @@ export default async function DashboardOverview() {
 
         <div className="card p-6 flex items-center justify-between">
           <div>
-            <div className="text-xs font-semibold mb-1 uppercase tracking-wider" style={{ color: 'var(--shield-text)' }}>Critical Issues</div>
+            <div className="text-xs font-semibold mb-1 uppercase tracking-wider" style={{ color: 'var(--zynth-text)' }}>Critical Issues</div>
             <div className="text-4xl font-black" style={{ color: hasScans && latestScan.scan_issues.filter((i: any) => i.severity === 'CRITICAL' && !i.is_fixed).length > 0 ? '#ff4444' : '#00ff88' }}>
               {hasScans ? latestScan.scan_issues.filter((i: any) => i.severity === 'CRITICAL' && !i.is_fixed).length : '0'}
             </div>
@@ -58,7 +58,7 @@ export default async function DashboardOverview() {
 
         <div className="card p-6 flex items-center justify-between">
           <div>
-            <div className="text-xs font-semibold mb-1 uppercase tracking-wider" style={{ color: 'var(--shield-text)' }}>Total Scans</div>
+            <div className="text-xs font-semibold mb-1 uppercase tracking-wider" style={{ color: 'var(--zynth-text)' }}>Total Scans</div>
             <div className="text-4xl font-black text-white">
               {recentScans?.length || 0}
             </div>
@@ -78,11 +78,11 @@ export default async function DashboardOverview() {
           
           {!hasScans ? (
             <div className="card p-12 text-center border-dashed">
-              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4" style={{ color: 'var(--shield-text)' }}>
+              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4" style={{ color: 'var(--zynth-text)' }}>
                 <Search size={24} />
               </div>
               <h3 className="text-lg font-bold mb-2">No scans yet</h3>
-              <p className="text-sm mb-6 max-w-sm mx-auto" style={{ color: 'var(--shield-text)' }}>
+              <p className="text-sm mb-6 max-w-sm mx-auto" style={{ color: 'var(--zynth-text)' }}>
                 You haven't run any security scans. Start by scanning your first domain.
               </p>
               <Link href="/dashboard/scan" className="btn-primary inline-flex items-center gap-2 px-6 py-2">
@@ -104,7 +104,7 @@ export default async function DashboardOverview() {
                     </div>
                     <div>
                       <div className="font-bold">{scan.url}</div>
-                      <div className="text-xs" style={{ color: 'var(--shield-text)' }}>
+                      <div className="text-xs" style={{ color: 'var(--zynth-text)' }}>
                         {new Date(scan.started_at).toLocaleString()} • {scan.scan_issues.length} total issues
                       </div>
                     </div>
@@ -137,14 +137,14 @@ export default async function DashboardOverview() {
           <h2 className="text-lg font-bold">AI Priority Guide</h2>
           <div className="card p-6" style={{ background: 'rgba(0,255,136,0.02)' }}>
             {!hasScans ? (
-              <p className="text-sm italic" style={{ color: 'var(--shield-text)' }}>Run a scan to get AI-prioritized fix instructions.</p>
+              <p className="text-sm italic" style={{ color: 'var(--zynth-text)' }}>Run a scan to get AI-prioritized fix instructions.</p>
             ) : (
               <div>
-                <p className="text-sm whitespace-pre-line leading-relaxed" style={{ color: 'var(--shield-text)' }}>
+                <p className="text-sm whitespace-pre-line leading-relaxed" style={{ color: 'var(--zynth-text)' }}>
                   {latestScan.ai_priority || "All critical issues have been resolved. Excellent work maintaining your security posture."}
                 </p>
                 {latestScan.ai_priority && (
-                  <Link href={`/dashboard/scan/${latestScan.id}`} className="mt-4 text-xs font-bold flex items-center gap-1 hover:underline" style={{ color: 'var(--shield-green)' }}>
+                  <Link href={`/dashboard/scan/${latestScan.id}`} className="mt-4 text-xs font-bold flex items-center gap-1 hover:underline" style={{ color: 'var(--zynth-green)' }}>
                     Read step-by-step fix guides <ChevronRight size={14} />
                   </Link>
                 )}

@@ -21,14 +21,14 @@ export default async function HistoryPage() {
     <div className="animate-fade-up max-w-5xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-black mb-2">Audit History</h1>
-        <p style={{ color: 'var(--shield-text)' }}>
+        <p style={{ color: 'var(--zynth-text)' }}>
           A complete log of all security audits performed on your account.
         </p>
       </div>
 
       <div className="card overflow-hidden">
         {(!scans || scans.length === 0) ? (
-          <div className="p-12 text-center text-[var(--shield-text)]">
+          <div className="p-12 text-center text-[var(--zynth-text)]">
             <ShieldCheck size={48} className="mx-auto mb-4 opacity-50" />
             <p className="font-medium text-white mb-1">No audit history available</p>
             <p className="text-sm mb-4">Run your first audit to generate a report.</p>
@@ -37,7 +37,7 @@ export default async function HistoryPage() {
         ) : (
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-[var(--shield-text)] bg-white/5">
+              <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-[var(--zynth-text)] bg-white/5">
                 <th className="p-4 font-bold">Target URL</th>
                 <th className="p-4 font-bold">Date</th>
                 <th className="p-4 font-bold">Score</th>
@@ -54,11 +54,11 @@ export default async function HistoryPage() {
                 return (
                   <tr key={scan.id} className="hover:bg-white/[0.02] transition-colors group">
                     <td className="p-4 font-bold text-white">{scan.url}</td>
-                    <td className="p-4 text-sm text-[var(--shield-text)] flex items-center gap-2">
+                    <td className="p-4 text-sm text-[var(--zynth-text)] flex items-center gap-2">
                        <Calendar size={14} /> {date.toLocaleDateString()}
                     </td>
                     <td className="p-4 font-black" style={{ color: scoreColor }}>
-                      {scan.score}<span className="text-xs text-[var(--shield-text)] font-semibold">/100</span>
+                      {scan.score}<span className="text-xs text-[var(--zynth-text)] font-semibold">/100</span>
                     </td>
                     <td className="p-4">
                       {criticalCount > 0 ? (
@@ -66,7 +66,7 @@ export default async function HistoryPage() {
                           {criticalCount}
                         </span>
                       ) : (
-                        <span className="text-[var(--shield-text)] text-sm">—</span>
+                        <span className="text-[var(--zynth-text)] text-sm">—</span>
                       )}
                     </td>
                     <td className="p-4 text-right">

@@ -26,14 +26,14 @@ export default async function DashboardLayout({
   return (
     <div className="min-h-screen hero-bg flex">
       {/* Sidebar */}
-      <aside className="w-64 border-r fixed h-full flex flex-col" style={{ borderColor: 'var(--shield-border)', background: 'rgba(6,11,20,0.95)' }}>
+      <aside className="w-64 border-r fixed h-full flex flex-col" style={{ borderColor: 'var(--zynth-border)', background: 'rgba(6,11,20,0.95)' }}>
         <div className="p-6">
           <Link href="/dashboard" className="flex items-center gap-2 mb-8">
             <div className="w-8 h-8 rounded shrink-0 bg-gradient-to-br from-[#00ff88] to-[#00664d] flex items-center justify-center">
               <Shield size={18} className="text-[#060b14]" />
             </div>
-            <span className="text-xl font-extrabold tracking-tight" style={{ color: 'var(--shield-white)' }}>
-              Shield<span style={{ color: 'var(--shield-green)' }}>ly</span>
+            <span className="text-xl font-extrabold tracking-tight" style={{ color: 'var(--zynth-white)' }}>
+              Zynt<span style={{ color: 'var(--zynth-green)' }}>h</span>
             </span>
           </Link>
 
@@ -46,7 +46,7 @@ export default async function DashboardLayout({
             ].map((item) => (
               <Link key={item.label} href={item.href}
                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-white/5"
-                style={{ color: 'var(--shield-text)' }}>
+                style={{ color: 'var(--zynth-text)' }}>
                 <item.icon size={18} />
                 {item.label}
               </Link>
@@ -57,24 +57,24 @@ export default async function DashboardLayout({
         {/* Plan Upgrade Teaser */}
         <div className="mt-auto p-6">
           <div className="rounded-xl p-4 mb-4" style={{ background: 'rgba(0,255,136,0.05)', border: '1px solid rgba(0,255,136,0.1)' }}>
-            <div className="text-xs font-bold mb-1 uppercase tracking-wider" style={{ color: 'var(--shield-green)' }}>
+            <div className="text-xs font-bold mb-1 uppercase tracking-wider" style={{ color: 'var(--zynth-green)' }}>
               {profile?.plan || 'Free'} Plan
             </div>
-            <p className="text-xs mb-3" style={{ color: 'var(--shield-text)' }}>
+            <p className="text-xs mb-3" style={{ color: 'var(--zynth-text)' }}>
               {profile?.plan === 'free' ? 'Upgrade to Starter to unlock full AI reports.' : 'Manage your billing & usage.'}
             </p>
-            <Link href="/dashboard/settings/billing" className="text-xs font-semibold flex items-center gap-1 transition-colors hover:text-white" style={{ color: 'var(--shield-green)' }}>
+            <Link href="/dashboard/settings/billing" className="text-xs font-semibold flex items-center gap-1 transition-colors hover:text-white" style={{ color: 'var(--zynth-green)' }}>
               View plans <ChevronRight size={12} />
             </Link>
           </div>
 
-          <div className="flex items-center justify-between border-t pt-4" style={{ borderColor: 'var(--shield-border)' }}>
+          <div className="flex items-center justify-between border-t pt-4" style={{ borderColor: 'var(--zynth-border)' }}>
             <div className="truncate pr-2">
               <div className="text-sm font-medium text-white truncate">{profile?.full_name || 'User'}</div>
-              <div className="text-xs truncate" style={{ color: 'var(--shield-text)' }}>{user.email}</div>
+              <div className="text-xs truncate" style={{ color: 'var(--zynth-text)' }}>{user.email}</div>
             </div>
             <form action="/auth/signout" method="post">
-              <button type="submit" className="text-[var(--shield-text)] hover:text-white transition-colors" title="Log out">
+              <button type="submit" className="text-[var(--zynth-text)] hover:text-white transition-colors" title="Log out">
                 <LogOut size={16} />
               </button>
             </form>
