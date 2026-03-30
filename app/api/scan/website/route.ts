@@ -50,7 +50,7 @@ async function checkSSL(url: string): Promise<{ issues: ScanIssue[], info: Recor
     
     const res = await fetch(endpoint, {
       signal: AbortSignal.timeout(15000),
-      headers: { 'User-Agent': 'Shieldly-Scanner/1.0' }
+      headers: { 'User-Agent': 'Zynth-Scanner/1.0' }
     })
     
     if (res.ok) {
@@ -118,7 +118,7 @@ async function checkSecurityHeaders(url: string): Promise<ScanIssue[]> {
     const res = await fetch(url, {
       method: 'GET',
       signal: AbortSignal.timeout(10000),
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; Shieldly-Scanner/1.0)' },
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; Zynth-Scanner/1.0)' },
     })
     const headers = res.headers
 

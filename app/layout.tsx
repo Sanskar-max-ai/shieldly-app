@@ -2,21 +2,21 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Shieldly — AI Security Audit Service for Small Business',
-  description: 'Paste a URL. Get a professional security audit in under 2 minutes. No technical knowledge needed. Shieldly audits your website, APIs, and AI agents for vulnerabilities — then tells you exactly how to fix them.',
-  keywords: 'security audit, website security, AI security, small business security, vulnerability scanner, penetration testing, cybersecurity service',
-  authors: [{ name: 'Shieldly' }],
+  title: 'Zynth — AI-Powered Security Audit Service',
+  description: 'Instant security audits for your digital infrastructure. Zynth uses advanced AI to find vulnerabilities in websites, APIs, and AI agents before hackers do.',
+  keywords: 'security audit, Zynth, cyber security, AI security, vulnerability scanner, penetration testing, zynthsecure',
+  authors: [{ name: 'Zynth Security' }],
   openGraph: {
-    title: 'Shieldly — AI Security Audit Service for Small Business',
-    description: 'Paste a URL. Get a professional security audit. No technical knowledge needed.',
+    title: 'Zynth — AI Security Audit',
+    description: 'Professional security audits in under 2 minutes. No technical knowledge needed.',
     type: 'website',
-    url: 'https://shieldly.io',
+    url: 'https://zynthsecure.com',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Shieldly — AI Security Audit Service',
-    description: 'Paste a URL. Get a professional security audit. No technical knowledge needed.',
+    title: 'Zynth — AI Security',
+    description: 'Instant AI-powered security audits for small businesses.',
   },
   icons: {
     icon: '/favicon.ico',
@@ -33,6 +33,7 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
       <body className="antialiased">
         {children}

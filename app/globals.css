@@ -3,17 +3,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --shield-green: #00ff88;
-  --shield-green-dim: #00cc6a;
-  --shield-dark: #060b14;
-  --shield-card: #0d1526;
-  --shield-border: #1a2540;
-  --shield-text: #94a3b8;
-  --shield-white: #f0f6ff;
-  --critical: #ff4444;
-  --high: #ff8c00;
-  --medium: #ffd700;
-  --low: #00bfff;
+  --zynth-primary: #6366f1;
+  --zynth-primary-dim: #4f46e5;
+  --zynth-secondary: #a855f7;
+  --zynth-accent: #2dd4bf;
+  --zynth-dark: #020617;
+  --zynth-card: #0f172a;
+  --zynth-border: #1e293b;
+  --zynth-text: #94a3b8;
+  --zynth-white: #f8fafc;
+  --critical: #ef4444;
+  --high: #f97316;
+  --medium: #eab308;
+  --low: #2dd4bf;
 }
 
 * {
@@ -25,56 +27,56 @@ html {
 }
 
 body {
-  background-color: var(--shield-dark);
-  color: var(--shield-white);
-  font-family: 'Inter', sans-serif;
+  background-color: var(--zynth-dark);
+  color: var(--zynth-white);
+  font-family: 'Outfit', 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--shield-dark); }
-::-webkit-scrollbar-thumb { background: var(--shield-border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--shield-green-dim); }
+::-webkit-scrollbar-track { background: var(--zynth-dark); }
+::-webkit-scrollbar-thumb { background: var(--zynth-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--zynth-primary); }
 
 /* Gradient glow effects */
-.glow-green {
-  box-shadow: 0 0 30px rgba(0, 255, 136, 0.15), 0 0 60px rgba(0, 255, 136, 0.05);
+.glow-primary {
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.15), 0 0 60px rgba(168, 85, 247, 0.05);
 }
 
 .text-glow {
-  text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+  text-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
 }
 
 /* Animated gradient background */
 .hero-bg {
   background: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 255, 136, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0, 100, 255, 0.05) 0%, transparent 50%),
-    var(--shield-dark);
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(168, 85, 247, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+    var(--zynth-dark);
 }
 
 /* Grid pattern */
 .grid-bg {
   background-image: 
-    linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(rgba(168, 85, 247, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
 }
 
 /* Card styles */
 .card {
-  background: var(--shield-card);
-  border: 1px solid var(--shield-border);
-  border-radius: 16px;
-  transition: all 0.3s ease;
+  background: var(--zynth-card);
+  border: 1px solid var(--zynth-border);
+  border-radius: 20px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card:hover {
-  border-color: rgba(0, 255, 136, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0, 255, 136, 0.08);
+  border-color: rgba(168, 85, 247, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(168, 85, 247, 0.1);
 }
 
 /* Badge styles */
@@ -84,9 +86,9 @@ body {
 .badge-low { background: rgba(0,191,255,0.15); color: #44ccff; border: 1px solid rgba(0,191,255,0.3); }
 
 /* Animations */
-@keyframes pulseGreen {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,136,0.4); }
-  50% { box-shadow: 0 0 0 12px rgba(0,255,136,0); }
+@keyframes pulseBrand {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(168, 85, 247, 0); }
 }
 
 @keyframes scanLine {
@@ -97,28 +99,19 @@ body {
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(32px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-12px); }
 }
 
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes dash {
-  to { stroke-dashoffset: 0; }
-}
-
-.animate-fade-up { animation: fadeUp 0.6s ease forwards; }
-.animate-float { animation: float 4s ease-in-out infinite; }
-.animate-spin-slow { animation: spin-slow 20s linear infinite; }
-.animate-pulse-green { animation: pulseGreen 2s ease-in-out infinite; }
+.animate-fade-up { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-spin-slow { animation: spin-slow 30s linear infinite; }
+.animate-pulse-brand { animation: pulseBrand 2s ease-in-out infinite; }
 
 /* Delay utilities */
 .delay-100 { animation-delay: 0.1s; }
@@ -129,18 +122,20 @@ body {
 
 /* Button styles */
 .btn-primary {
-  background: linear-gradient(135deg, #00ff88, #00cc6a);
-  color: #060b14;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white;
   font-weight: 700;
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  border-radius: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(0, 255, 136, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+  filter: brightness(1.1);
 }
 
 .btn-primary:active {
@@ -148,16 +143,17 @@ body {
 }
 
 .btn-secondary {
-  background: transparent;
-  color: var(--shield-white);
-  border: 1px solid var(--shield-border);
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--zynth-white);
+  border: 1px solid var(--zynth-border);
+  border-radius: 14px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
 }
 
 .btn-secondary:hover {
-  border-color: rgba(0,255,136,0.5);
-  background: rgba(0,255,136,0.05);
+  border-color: rgba(168, 85, 247, 0.5);
+  background: rgba(168, 85, 247, 0.08);
 }
 
 /* Score ring */
