@@ -218,9 +218,7 @@ async function ProtectedDomainsSub() {
           <MonitorToggle 
             key={domain.id} 
             domainId={domain.id} 
-            domainName={domain.domain} 
-            initialEnabled={domain.monitoring_enabled} 
-            isPro={isPro}
+            initialStatus={domain.monitoring_enabled} 
           />
         ))}
       </div>

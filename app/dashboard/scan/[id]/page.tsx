@@ -8,6 +8,7 @@ import VerifiedReportBadge from '@/components/VerifiedReportBadge'
 import ResolutionCenter from '@/components/ResolutionCenter'
 import SecurityTutor from '@/components/SecurityTutor'
 import DownloadPdfButton from '@/components/DownloadPdfButton'
+import HackerViewToggle from '@/components/HackerViewToggle'
 import RemediationButton from '@/components/RemediationButton'
 
 const WEB_CHECKS = [
@@ -75,6 +76,9 @@ export default async function ScanReportPage({ params }: { params: Promise<{ id:
 
       <div className="grid lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2">
+          {/* HACKER'S VIEW TOGGLE - SHOCK FACTOR */}
+          <HackerViewToggle id={id} />
+
           <Suspense fallback={<div className="grid md:grid-cols-2 gap-4 mb-12"><Shimmer className="h-20" /><Shimmer className="h-20" /></div>}>
             <SecurityTestsSub id={id} userId={user.id} scanType={scan.scan_type} />
           </Suspense>

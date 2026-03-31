@@ -9,6 +9,9 @@ const dnsResolveTxt = promisify(dns.resolveTxt)
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
+import { scanCommonPorts } from '@/utils/scan/portScanner'
+import { matchCVESignatures } from '@/utils/scan/cveMatcher'
+
 function generateId() {
   return Math.random().toString(36).substring(2, 15)
 }
@@ -266,6 +269,35 @@ async function checkDNSRecords(domain: string): Promise<ScanIssue[]> {
   return issues
 }
 
+async function checkNetworkPorts(domain: string): Promise<ScanIssue[]> {
+  const issues: ScanIssue[] = []
+  const portResults = await scanCommonPorts(domain)
+  
+  for (const res of portResults) {
+    if (res.status === 'OPEN') {
+      // 1. Log the open port
+      issues.push({
+        id: generateId(),
+        testName: `Open Port Detected: ${res.port} (${res.service})`,
+        severity: ['80', '443'].includes(String(res.port)) ? 'INFO' : 'HIGH',
+        description: `External network probe found Port ${res.port} is publicly accessible. Exposed services like ${res.service} are prime targets for brute-force attacks.`,
+        aiExplanation: `Your server has a "door" (Port ${res.port}) wide open. While some doors (like 80 and 443 for web traffic) must be open, others like Database or SSH ports should be shielded behind a VPN or Firewall.`,
+        aiFixSteps: [
+          `If this service is not needed publicly, block Port ${res.port} in your Cloudflare or WAF settings`,
+          `Ensure Port ${res.port} is only accessible from your specific IP address`,
+          `Use Zynth Auto-Remediation to generate a secure firewall rule`
+        ],
+        isFixed: false,
+        autoRemediable: true
+      })
+
+      // 2. Potentially match real CVEs if we found a service version
+      // (Simplified for now - in prod we would grab the banner from the port)
+    }
+  }
+  return issues
+}
+
 async function checkExposedFiles(url: string): Promise<ScanIssue[]> {
   const issues: ScanIssue[] = []
   const domain = url.replace(/\/$/, '')
@@ -380,14 +412,36 @@ export async function POST(req: NextRequest) {
     const domain = extractDomain(url)
     const scanId = generateId()
 
-    // Run all checks in parallel
-    const [sslResult, headerIssues, dnsIssues, exposedFileIssues, sslExpiryIssues] = await Promise.all([
+    // Run all checks in parallel (including NEW network probes)
+    const [sslResult, headerIssues, dnsIssues, exposedFileIssues, sslExpiryIssues, networkIssues] = await Promise.all([
       checkSSL(url),
       checkSecurityHeaders(url),
       checkDNSRecords(domain),
       checkExposedFiles(url),
       checkSSLExpiry(url),
+      checkNetworkPorts(domain),
     ])
+
+    // Find real CVEs if the server header was identified
+    const cveIssues: ScanIssue[] = []
+    
+    // Scan through all issues to find the server version
+    const serverIssue = headerIssues.find(i => i.testName === 'Server Version Exposed')
+    if (serverIssue?.details?.serverHeader) {
+      const signatures = matchCVESignatures(serverIssue.details.serverHeader as string)
+      for (const sig of signatures) {
+        cveIssues.push({
+          id: generateId(),
+          testName: `Critical Vulnerability Found: ${sig.id}`,
+          severity: sig.severity,
+          description: `${sig.name} - ${sig.description}`,
+          aiExplanation: `Your server (running ${serverIssue.details.serverHeader}) has a known, publicly registered security hole called ${sig.id}. Hacker tools like Nuclei or Metasploit can use this exact exploit to take control of your server.`,
+          aiFixSteps: [sig.remediation, `Restrict network access to Port 80/443 until the update is complete`, `Apply the Zynth Auto-Patch for ${sig.id}`],
+          isFixed: false,
+          autoRemediable: true
+        })
+      }
+    }
 
     const allIssues: ScanIssue[] = [
       ...sslResult.issues,
@@ -395,6 +449,8 @@ export async function POST(req: NextRequest) {
       ...dnsIssues,
       ...exposedFileIssues,
       ...sslExpiryIssues,
+      ...networkIssues,
+      ...cveIssues,
     ]
 
     // Sort by severity
