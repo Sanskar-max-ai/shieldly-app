@@ -50,7 +50,7 @@ export async function sendDiscordAlert(webhookUrl: string, alert: DiscordAlert) 
           icon_url: "https://zynth.io/icon.png" // Placeholder
         },
         footer: {
-          text: "Autonomous Remediation Engine | shieldly-app",
+          text: "Autonomous Remediation Engine | zynth-app",
           icon_url: "https://zynth.io/icon.png"
         },
         timestamp: new Date().toISOString()

@@ -65,13 +65,13 @@ export default function ResolutionCenter({ scanId, userId, url }: ResolutionCent
         </div>
       </div>
 
-      <ExpertRequestModal 
-        isOpen={isExpertModalOpen} 
-        onClose={() => setIsExpertModalOpen(false)} 
-        scanId={scanId}
-        userId={userId}
-        url={url}
-      />
+      {isExpertModalOpen && (
+        <ExpertRequestModal 
+          onClose={() => setIsExpertModalOpen(false)} 
+          scanId={scanId}
+          userId={userId}
+        />
+      )}
     </>
   )
 }

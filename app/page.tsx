@@ -82,22 +82,20 @@ function Hero() {
 
       {/* Main headline */}
       <h1 className="animate-fade-up delay-100 text-center text-5xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 max-w-4xl">
-        Your Website Has
+        The Autonomous
         <br />
-        <span style={{ color: 'var(--zynth-green)' }} className="text-glow">Security Holes.</span>
+        <span style={{ color: 'var(--zynth-green)' }} className="text-glow">Remediation Engine.</span>
         <br />
-        <span style={{ color: 'var(--zynth-text)', fontSize: '0.85em' }}>We Find Them for You.</span>
+        <span style={{ color: 'var(--zynth-text)', fontSize: '0.85em' }}>We Don't Just Find Holes. We Fix Them.</span>
       </h1>
 
       <p className="animate-fade-up delay-200 text-center text-lg md:text-xl max-w-2xl mb-10 leading-relaxed"
         style={{ color: 'var(--zynth-text)' }}>
-        Paste any URL below. Our AI audit runs{' '}
-        <span style={{ color: 'var(--zynth-white)', fontWeight: 600 }}>30+ security tests</span>{' '}
-        with{' '}
-        <span style={{ color: 'var(--zynth-green)', fontWeight: 600 }}>verifiable evidence</span>{' '}
-        and delivers a{' '}
-        <span style={{ color: 'var(--zynth-green)', fontWeight: 600 }}>resolution guide</span>{' '}
-        to actually fix the holes.
+        Zynth is the world's first AI-powered security engine that{' '}
+        <span style={{ color: 'var(--zynth-white)', fontWeight: 600 }}>identifies critical holes</span>{' '}
+        and delivers{' '}
+        <span style={{ color: 'var(--zynth-green)', fontWeight: 600 }}>One-Click patches</span>{' '}
+        to secure your infrastructure instantly. No technical knowledge required.
       </p>
 
       {/* Scan input */}
@@ -244,10 +242,10 @@ function StatsBar() {
 // ── How It Works ─────────────────────────────────────────────────────────────
 function HowItWorks() {
   const steps = [
-    { n: '01', icon: '🔗', title: 'Paste Your URL', desc: 'Enter any website URL or AI agent address. No setup, no installation, no technical knowledge required.' },
-    { n: '02', icon: '⚡', title: 'Verifiable Audit', desc: 'Watch our engine perform 30+ checks in real-time. We provide a signed cryptographic hash for every report to ensure authenticity.' },
-    { n: '03', icon: '📋', title: 'Plain-English Report', desc: 'Every vulnerability is explained in simple language with prioritized fix instructions tailored to your platform.' },
-    { n: '04', icon: '🛠️', title: 'Closing the Loop', desc: 'Use our dev handover tools or hire a Zynth-certified expert to remediate findings instantly. We stay until it is fixed.' },
+    { n: '01', icon: '🔗', title: 'Connect Your URL', desc: 'Enter any website URL or AI agent address. Zynth immediately initializes a deep forensic audit of your infrastructure.' },
+    { n: '02', icon: '⚡', title: 'Deep Forensic Scan', desc: 'Watch our engine perform 30+ checks in real-time, using professional-grade Nmap and Nuclei probes to find hidden holes.' },
+    { n: '03', icon: '🛠️', title: 'Auto-Remediate', desc: 'Review prioritized vulnerabilities and use Zynth\'s "One-Click Fix" to generate code patches and firewall rules instantly.' },
+    { n: '04', icon: '🛡️', title: 'Continuous Sentinel', desc: 'Enable 24/7 autonomous patrolling. Zynth watches your domain while you sleep and alerts you the second a new hole appears.' },
   ]
   return (
     <section id="features" className="py-24 px-6">
