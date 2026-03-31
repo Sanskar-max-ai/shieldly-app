@@ -61,7 +61,6 @@ INSTRUCTIONS:
 
   try {
     const contents = [
-      { role: 'user', parts: [{ text: systemPrompt }] },
       ...(history || []).map(m => ({
         role: m.role === 'assistant' ? 'model' : 'user',
         parts: [{ text: m.content }]
@@ -75,6 +74,9 @@ INSTRUCTIONS:
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          system_instruction: {
+            parts: [{ text: systemPrompt }]
+          },
           contents,
           generationConfig: {
             temperature: 0.7,
