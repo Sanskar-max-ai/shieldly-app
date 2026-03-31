@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   const { data: { session }, error: sessionError } = await supabase.auth.getSession()
   
   if (sessionError || !session) {
-    console.error('Zynth Auth Error: No session found', sessionError)
+    console.error('ZynthSecure Auth Error: No session found', sessionError)
     return NextResponse.json({ error: 'Unauthorized: Session missing' }, { status: 401 })
   }
 
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
   })
 
   // 4. Call Gemini
-  const systemPrompt = `You are the Zynth Security Guard, an elite cybersecurity tutor. 
+  const systemPrompt = `You are the ZynthSecure Security Guard, an elite cybersecurity tutor. 
 Your goal is to help the user understand and fix the security issues found in their recent audit of ${scan.url}.
 
 SCAN CONTEXT:

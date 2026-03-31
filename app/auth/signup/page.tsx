@@ -24,7 +24,7 @@ export default function SignupPage() {
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
+  const success = ''
   const router = useRouter()
   const supabase = createClient()
 

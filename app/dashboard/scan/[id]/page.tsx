@@ -2,7 +2,8 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Suspense } from 'react'
-import { ArrowLeft, CheckCircle, AlertTriangle, Info, Clock, ExternalLink, Download, LayoutDashboard, Bot, Globe } from 'lucide-react'
+import type { Severity } from '@/types'
+import { ArrowLeft, CheckCircle, AlertTriangle, Info, Clock, ExternalLink, LayoutDashboard, Bot, Globe } from 'lucide-react'
 import { Shimmer } from '@/components/dashboard/skeletons'
 import VerifiedReportBadge from '@/components/VerifiedReportBadge'
 import ResolutionCenter from '@/components/ResolutionCenter'
@@ -35,6 +36,24 @@ const AI_CHECKS = [
   { id: 'jailbreak', name: 'Model Jailbreak', desc: 'Attempted multi-step behavioral bypass' }
 ]
 
+type Difficulty = 'EASY' | 'MEDIUM' | 'HARD'
+
+type ScanIssueRecord = {
+  id: string
+  severity: Severity
+  test_name: string
+  description: string
+  difficulty?: Difficulty | null
+  ai_explanation?: string | null
+  ai_fix_steps?: string[] | null
+}
+
+type PriorityDetails = {
+  today: string[]
+  week: string[]
+  month: string[]
+}
+
 export default async function ScanReportPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
@@ -62,7 +81,7 @@ export default async function ScanReportPage({ params }: { params: Promise<{ id:
     .eq('id', user.id)
     .single()
 
-  const isPro = profile?.plan === 'pro'
+  const isPro = profile?.plan !== 'free'
 
   return (
     <div className="animate-fade-up max-w-5xl mx-auto pb-12 print:p-0 print:max-w-none">
@@ -88,7 +107,7 @@ export default async function ScanReportPage({ params }: { params: Promise<{ id:
           </Suspense>
 
           <Suspense fallback={<div className="space-y-6"><Shimmer className="h-40" /><Shimmer className="h-40" /></div>}>
-            <DetailedFindingsSub id={id} userId={user.id} />
+            <DetailedFindingsSub id={id} />
           </Suspense>
         </div>
 
@@ -97,7 +116,7 @@ export default async function ScanReportPage({ params }: { params: Promise<{ id:
 
           <VerifiedReportBadge scanId={id} />
           
-          <ResolutionCenter scanId={id} userId={user.id} url={scan.url} />
+          <ResolutionCenter scanId={id} userId={user.id} />
 
           <div className="card p-6 bg-gradient-to-br from-[#00ff88]/10 to-transparent">
              <h4 className="text-sm font-bold mb-2">Compliance Ready</h4>
@@ -208,7 +227,7 @@ async function SecurityTestsSub({ id, userId, scanType }: { id: string, userId: 
       <h2 className="text-2xl font-bold mb-6 mt-12 border-t border-white/10 pt-8 print:text-black print:border-gray-200 print:mt-8">Security Tests Performed</h2>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
         {checks.map((check, i) => {
-          const failed = scan.scan_issues.some((issue: any) => issue.test_name.toLowerCase().includes(check.id))
+          const failed = (scan.scan_issues as ScanIssueRecord[]).some((issue) => issue.test_name.toLowerCase().includes(check.id))
           return (
             <div key={i} className={`flex items-start gap-3 p-4 rounded-xl border ${failed ? 'bg-red-500/5 text-red-100 border-red-500/20 print:bg-white print:border-red-200 print:text-red-700' : 'bg-[#060b14] border-white/5 text-white print:bg-white print:border-gray-100 print:text-black'}`}>
               {failed ? (
@@ -239,11 +258,12 @@ async function ActionPlanSub({ id, userId }: { id: string, userId: string }) {
 
   if (!scan || !scan.scan_issues || scan.scan_issues.length === 0) return null
 
-  const issues = scan.scan_issues as any[]
-  const priorityDetails = (scan.ai_priority_details as any) || {
-    today: issues.filter(i => i.severity === 'CRITICAL' || i.severity === 'HIGH').map(i => i.id),
-    week: issues.filter(i => i.severity === 'MEDIUM').map(i => i.id),
-    month: issues.filter(i => i.severity === 'LOW').map(i => i.id)
+  const issues = scan.scan_issues as ScanIssueRecord[]
+  const storedPriorityDetails = scan.ai_priority_details as Partial<PriorityDetails> | null | undefined
+  const priorityDetails: PriorityDetails = {
+    today: storedPriorityDetails?.today || issues.filter((issue) => issue.severity === 'CRITICAL' || issue.severity === 'HIGH').map((issue) => issue.id),
+    week: storedPriorityDetails?.week || issues.filter((issue) => issue.severity === 'MEDIUM').map((issue) => issue.id),
+    month: storedPriorityDetails?.month || issues.filter((issue) => issue.severity === 'LOW').map((issue) => issue.id)
   }
 
   const todayIssues = issues.filter(i => priorityDetails.today?.includes(i.id))
@@ -313,7 +333,7 @@ async function ActionPlanSub({ id, userId }: { id: string, userId: string }) {
   )
 }
 
-async function DetailedFindingsSub({ id, userId }: { id: string, userId: string }) {
+async function DetailedFindingsSub({ id }: { id: string }) {
   const supabase = await createClient()
   const { data: issues } = await supabase
     .from('scan_issues')
@@ -329,10 +349,10 @@ async function DetailedFindingsSub({ id, userId }: { id: string, userId: string 
           <div className="card p-12 text-center border-dashed border-white/10 text-[var(--zynth-text)] flex flex-col items-center print:text-gray-500">
              <CheckCircle className="text-[#00ff88] mb-4" size={48} />
              <h3 className="text-lg font-bold text-white mb-2 print:text-black">Perfect Score!</h3>
-             <p>We couldn't find any common vulnerabilities on this domain.</p>
-          </div>
-        ) : (
-          issues.map((issue: any) => (
+             <p>We couldn&apos;t find any common vulnerabilities on this domain.</p>
+           </div>
+         ) : (
+          (issues as ScanIssueRecord[]).map((issue) => (
             <div key={issue.id} id={`issue-${issue.id}`} className="card overflow-hidden group scroll-mt-24 print:break-inside-avoid print:bg-white print:border-gray-200">
               <div className="p-6">
                 <div className="flex items-start justify-between gap-4 mb-4">

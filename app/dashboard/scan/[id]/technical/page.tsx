@@ -1,7 +1,26 @@
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import type { Severity } from '@/types'
 import { ArrowLeft, Printer, Shield, ShieldCheck, Terminal, Globe, Lock, Search } from 'lucide-react'
+
+type TechnicalIssue = {
+  id: string
+  severity: Severity
+  test_name: string
+  description: string
+  ai_explanation?: string | null
+  ai_fix_steps?: string[] | null
+}
+
+type TechnicalScan = {
+  id: string
+  url: string
+  scan_type: string
+  score: number
+  executive_summary?: string | null
+  scan_issues: TechnicalIssue[]
+}
 
 export default async function TechnicalBriefPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -23,9 +42,9 @@ export default async function TechnicalBriefPage({ params }: { params: Promise<{
     return <div className="p-20 text-center">Audit Not Found</div>
   }
 
-  const criticalIssues = scan.scan_issues.filter((i: any) => i.severity === 'CRITICAL')
-  const highIssues = scan.scan_issues.filter((i: any) => i.severity === 'HIGH')
-  const otherIssues = scan.scan_issues.filter((i: any) => !['CRITICAL', 'HIGH'].includes(i.severity))
+  const technicalScan = scan as unknown as TechnicalScan
+  const criticalIssues = technicalScan.scan_issues.filter((issue) => issue.severity === 'CRITICAL')
+  const highIssues = technicalScan.scan_issues.filter((issue) => issue.severity === 'HIGH')
 
   return (
     <div className="bg-white text-slate-900 min-h-screen p-8 sm:p-12 font-sans selection:bg-slate-200 print:p-0">
@@ -50,16 +69,16 @@ export default async function TechnicalBriefPage({ params }: { params: Promise<{
               <Shield className="fill-slate-900" size={28} />
               <span className="text-xl font-black uppercase tracking-tighter">Zynth Security Audit</span>
             </div>
-            <h1 className="text-4xl font-black tracking-tight mb-2">{scan.url}</h1>
+            <h1 className="text-4xl font-black tracking-tight mb-2">{technicalScan.url}</h1>
             <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-bold text-slate-500">
-              <div className="flex items-center gap-1.5"><Globe size={14} /> DOMAIN: {new URL(scan.url).hostname}</div>
-              <div className="flex items-center gap-1.5 uppercase"><Terminal size={14} /> TYPE: {scan.scan_type} REPORT</div>
-              <div className="flex items-center gap-1.5"><Lock size={14} /> ID: {scan.id}</div>
+              <div className="flex items-center gap-1.5"><Globe size={14} /> DOMAIN: {new URL(technicalScan.url).hostname}</div>
+              <div className="flex items-center gap-1.5 uppercase"><Terminal size={14} /> TYPE: {technicalScan.scan_type} REPORT</div>
+              <div className="flex items-center gap-1.5"><Lock size={14} /> ID: {technicalScan.id}</div>
             </div>
           </div>
           <div className="text-right">
              <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Security Score</div>
-             <div className="text-6xl font-black">{scan.score}<span className="text-xl text-slate-300">/100</span></div>
+             <div className="text-6xl font-black">{technicalScan.score}<span className="text-xl text-slate-300">/100</span></div>
           </div>
         </header>
 
@@ -75,7 +94,7 @@ export default async function TechnicalBriefPage({ params }: { params: Promise<{
           </div>
           <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
              <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Total Findings</div>
-             <div className="text-3xl font-black text-slate-900">{scan.scan_issues.length}</div>
+             <div className="text-3xl font-black text-slate-900">{technicalScan.scan_issues.length}</div>
           </div>
         </section>
 
@@ -85,7 +104,7 @@ export default async function TechnicalBriefPage({ params }: { params: Promise<{
             <Search size={14} /> Executive Summary
           </h2>
           <div className="p-8 bg-slate-900 text-slate-100 rounded-3xl leading-relaxed">
-            {scan.executive_summary || "Automated passive vulnerability assessment completed. The following brief outlines technical findings detected across the infrastructure path."}
+            {technicalScan.executive_summary || "Automated passive vulnerability assessment completed. The following brief outlines technical findings detected across the infrastructure path."}
           </div>
         </section>
 
@@ -95,14 +114,14 @@ export default async function TechnicalBriefPage({ params }: { params: Promise<{
             <Terminal size={14} /> Vulnerability Matrix
           </h2>
           
-          {scan.scan_issues.length === 0 ? (
+          {technicalScan.scan_issues.length === 0 ? (
             <div className="py-20 text-center border-2 border-dashed border-slate-200 rounded-3xl">
               <ShieldCheck size={48} className="mx-auto text-emerald-500 mb-4" />
               <p className="font-bold text-slate-500">No vulnerabilities detected.</p>
             </div>
           ) : (
             <div className="space-y-8">
-              {scan.scan_issues.map((issue: any, i: number) => (
+              {technicalScan.scan_issues.map((issue, i: number) => (
                 <div key={i} className="group break-inside-avoid">
                   <div className="flex items-start gap-4 mb-3">
                     <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider shrink-0 mt-1.5 ${
@@ -145,7 +164,7 @@ export default async function TechnicalBriefPage({ params }: { params: Promise<{
         {/* Footer */}
         <footer className="border-t border-slate-200 pt-8 flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
            <div>Generated by Zynth Security Engine v2.0</div>
-           <div>Verified Scan ID: {scan.id}</div>
+           <div>Verified Scan ID: {technicalScan.id}</div>
            <div className="print:hidden">© 2026 Zynth Security. All rights reserved.</div>
         </footer>
       </div>

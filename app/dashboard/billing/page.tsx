@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { CheckCircle2, Shield, Zap, Sparkles } from 'lucide-react'
 
 export default function BillingPage() {
@@ -7,7 +6,7 @@ export default function BillingPage() {
       <div className="text-center mb-12">
         <h1 className="text-4xl font-black mb-4">Upgrade to Zynth Pro</h1>
         <p className="text-[var(--zynth-text)] max-w-2xl mx-auto">
-          You've seen the power of the Zynth Security Engine. Now, unlock continuous monitoring, the AI Security Tutor, and automated compliance reports.
+          You&apos;ve seen the power of the Zynth Security Engine. Now, unlock continuous monitoring, the AI Security Tutor, and automated compliance reports.
         </p>
       </div>
 

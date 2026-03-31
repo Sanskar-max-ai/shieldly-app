@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/utils/supabase/client'
-import { Activity, Shield, ShieldOff, Loader2 } from 'lucide-react'
+import { Shield, ShieldOff, Loader2 } from 'lucide-react'
 
 interface MonitorToggleProps {
   domainId: string

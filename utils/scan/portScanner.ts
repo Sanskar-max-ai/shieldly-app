@@ -74,7 +74,6 @@ export function probePort(host: string, port: number, timeout = 1500): Promise<P
  */
 export async function scanCommonPorts(host: string): Promise<PortResult[]> {
   const ports = Object.keys(COMMON_PORTS).map(Number)
-  const results: PortResult[] = []
 
   // To be stealthy and fast, we scan in small batches
   // This avoids being flagged as an "Attacker" by Cloudflare/WAF

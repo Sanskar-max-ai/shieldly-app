@@ -5,19 +5,21 @@ import { Terminal, ChevronDown, ChevronUp, ShieldCheck } from 'lucide-react'
 
 export default function HackerViewToggle({ id }: { id: string }) {
   const [isOpen, setIsOpen] = useState(false)
+  const [timestamp] = useState(() => new Date().toLocaleTimeString())
+  const [checksum] = useState(() => Math.random().toString(16).slice(2))
 
   // MOCK REAL-TIME LOG DATA (In prod this would be fetched from the scan_results)
   const logLines = [
-    `[${new Date().toLocaleTimeString()}] ZYNTH-WEBUGARD-v4.1 initialized...`,
-    `[${new Date().toLocaleTimeString()}] target: resolving DNS for ${id}...`,
-    `[${new Date().toLocaleTimeString()}] nmap -sV -T4 --top-ports 20 ${id}...`,
-    `[${new Date().toLocaleTimeString()}] PORT 22/tcp OPEN [Service: OpenSSH 7.6p1]`,
-    `[${new Date().toLocaleTimeString()}] PORT 80/tcp OPEN [Service: Nginx 1.14.0]`,
-    `[${new Date().toLocaleTimeString()}] nuclei -t vulnerabilities/signatures -u ${id}...`,
-    `[${new Date().toLocaleTimeString()}] [CVE-2019-9511] CRITICAL - Nginx Resource Exhaustion matches fingerprint...`,
-    `[${new Date().toLocaleTimeString()}] analyzing security headers for security-policy bypass...`,
-    `[${new Date().toLocaleTimeString()}] X-Frame-Options: MISSING [Risk: Clickjacking]`,
-    `[${new Date().toLocaleTimeString()}] report generation complete. checksum: ${Math.random().toString(16).slice(2)}`,
+    `[${timestamp}] ZYNTH-WEBUGARD-v4.1 initialized...`,
+    `[${timestamp}] target: resolving DNS for ${id}...`,
+    `[${timestamp}] nmap -sV -T4 --top-ports 20 ${id}...`,
+    `[${timestamp}] PORT 22/tcp OPEN [Service: OpenSSH 7.6p1]`,
+    `[${timestamp}] PORT 80/tcp OPEN [Service: Nginx 1.14.0]`,
+    `[${timestamp}] nuclei -t vulnerabilities/signatures -u ${id}...`,
+    `[${timestamp}] [CVE-2019-9511] CRITICAL - Nginx Resource Exhaustion matches fingerprint...`,
+    `[${timestamp}] analyzing security headers for security-policy bypass...`,
+    `[${timestamp}] X-Frame-Options: MISSING [Risk: Clickjacking]`,
+    `[${timestamp}] report generation complete. checksum: ${checksum}`,
   ]
 
   return (
@@ -31,7 +33,7 @@ export default function HackerViewToggle({ id }: { id: string }) {
         <div className="flex items-center gap-3">
           <Terminal size={20} className={isOpen ? 'text-[#00ff88]' : 'text-gray-400'} />
           <div>
-            <div className="text-sm font-bold text-white">Enable Hacker's Technical View</div>
+            <div className="text-sm font-bold text-white">Enable Hacker&apos;s Technical View</div>
             <div className="text-[10px] text-gray-500 uppercase font-black tracking-widest mt-0.5">
               Live Nmap & Nuclei Raw Output
             </div>

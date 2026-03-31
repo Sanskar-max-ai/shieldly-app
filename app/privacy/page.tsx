@@ -54,14 +54,14 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-xl font-black text-white uppercase tracking-widest mb-6">03. AI Processing</h2>
             <p>
-              Zynth uses Google Gemini's advanced LLMs to create remediation guides and explain security holes. By using Zynth, you acknowledge that your scan data is processed by our AI models to generate these professional insights. No personally identifiable information (PII) is used for training outside of your specific audit context.
+              Zynth uses Google Gemini&apos;s advanced LLMs to create remediation guides and explain security holes. By using Zynth, you acknowledge that your scan data is processed by our AI models to generate these professional insights. No personally identifiable information (PII) is used for training outside of your specific audit context.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-black text-white uppercase tracking-widest mb-6">04. Right to Erasure</h2>
             <p>
-              You have the "Right to be Forgotten." You can request the permanent destruction of all your scan history and user profiles at any time through your dashboard or by emailing our Zynth Command Center at <span className="text-white font-bold underline">privacy@zynthsecure.com</span>.
+              You have the &quot;Right to be Forgotten.&quot; You can request the permanent destruction of all your scan history and user profiles at any time through your dashboard or by emailing our Zynth Command Center at <span className="text-white font-bold underline">privacy@zynthsecure.com</span>.
             </p>
           </section>
           

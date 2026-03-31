@@ -24,7 +24,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-black text-white uppercase tracking-widest mb-6">01. Acceptance of Terms</h2>
             <p>
-              By accessing the Zynth Autonomous Remediation Engine ("Zynth", "Service", "We"), you agree to be bound by these legal terms. Zynth is a professional-grade cybersecurity platform. Unauthorized use, including bypass of security controls or illegal targeting of infrastructure, is strictly prohibited.
+              By accessing the Zynth Autonomous Remediation Engine (&quot;Zynth&quot;, &quot;Service&quot;, &quot;We&quot;), you agree to be bound by these legal terms. Zynth is a professional-grade cybersecurity platform. Unauthorized use, including bypass of security controls or illegal targeting of infrastructure, is strictly prohibited.
             </p>
           </section>
 
@@ -42,14 +42,14 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-xl font-black text-white uppercase tracking-widest mb-6">03. Autonomous Sentinel & Probes</h2>
             <p>
-              Our Sentinel engine runs background network discovery (Nmap-style) and signature fingerprinting (Nuclei-style). By enabling 24/7 Monitoring, you authorize Zynth to "knock" on your system's ports at random intervals to ensure security continuity.
+              Our Sentinel engine runs background network discovery (Nmap-style) and signature fingerprinting (Nuclei-style). By enabling 24/7 Monitoring, you authorize Zynth to &quot;knock&quot; on your system&apos;s ports at random intervals to ensure security continuity.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-black text-white uppercase tracking-widest mb-6">04. Limitation of Liability</h2>
             <p>
-              Zynth is a detection and remediation *assistant*. We provide tools and AI-generated code patches ("One-Click Fixes"). You are responsible for reviewing all patches before deployment. We explicitly disclaim liability for any exploit that occurs after a scan or any system failure resulting from an AI-generated patch.
+              Zynth is a detection and remediation *assistant*. We provide tools and AI-generated code patches (&quot;One-Click Fixes&quot;). You are responsible for reviewing all patches before deployment. We explicitly disclaim liability for any exploit that occurs after a scan or any system failure resulting from an AI-generated patch.
             </p>
           </section>
           

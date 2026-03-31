@@ -2,8 +2,17 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Suspense } from 'react'
+import type { Severity } from '@/types'
 import { ShieldCheck, Calendar, ArrowRight } from 'lucide-react'
 import { TableSkeleton } from '@/components/dashboard/skeletons'
+
+type HistoryScan = {
+  id: string
+  url: string
+  score: number
+  started_at: string
+  scan_issues: Array<{ severity: Severity }>
+}
 
 export default async function HistoryPage() {
   const supabase = await createClient()
@@ -43,7 +52,9 @@ async function AuditHistoryTable({ userId }: { userId: string }) {
     .eq('user_id', userId)
     .order('started_at', { ascending: false })
 
-  if (!scans || scans.length === 0) {
+  const historyScans = (scans ?? []) as unknown as HistoryScan[]
+
+  if (historyScans.length === 0) {
     return (
       <div className="card p-12 text-center text-[var(--zynth-text)]">
         <ShieldCheck size={48} className="mx-auto mb-4 opacity-50" />
@@ -67,9 +78,9 @@ async function AuditHistoryTable({ userId }: { userId: string }) {
           </tr>
         </thead>
         <tbody className="divide-y divide-white/5">
-          {scans.map((scan) => {
+          {historyScans.map((scan) => {
             const date = new Date(scan.started_at)
-            const criticalCount = scan.scan_issues.filter((i: any) => i.severity === 'CRITICAL').length
+            const criticalCount = scan.scan_issues.filter((issue) => issue.severity === 'CRITICAL').length
             const scoreColor = scan.score >= 80 ? '#00ff88' : scan.score >= 50 ? '#ffd700' : '#ff4444'
 
             return (

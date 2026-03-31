@@ -5,12 +5,17 @@ import { createClient } from '@/utils/supabase/client'
 import { CreditCard, ArrowLeft, Shield, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 
+type BillingProfile = {
+  plan: string | null
+}
+
 export default function BillingPage() {
-  const [profile, setProfile] = useState<any>(null)
+  const [profile, setProfile] = useState<BillingProfile | null>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClient()
 
   useEffect(() => {
+    const supabase = createClient()
+
     async function getProfile() {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
@@ -23,6 +28,7 @@ export default function BillingPage() {
       }
       setLoading(false)
     }
+
     getProfile()
   }, [])
 

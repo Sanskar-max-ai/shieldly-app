@@ -4,14 +4,23 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { User, Mail, Shield, CreditCard, Bell, Lock, Save } from 'lucide-react'
 
+type Profile = {
+  id: string
+  email: string | null
+  full_name: string | null
+  agency_name: string | null
+  plan: string | null
+}
+
 export default function SettingsPage() {
-  const [profile, setProfile] = useState<any>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
-  const supabase = createClient()
 
   useEffect(() => {
+    const supabase = createClient()
+
     async function getProfile() {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
@@ -24,11 +33,15 @@ export default function SettingsPage() {
       }
       setLoading(false)
     }
+
     getProfile()
   }, [])
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault()
+    if (!profile) return
+
+    const supabase = createClient()
     setSaving(true)
     setMessage('')
 
@@ -49,6 +62,7 @@ export default function SettingsPage() {
   }
 
   if (loading) return <div className="animate-pulse flex items-center justify-center p-20 text-[var(--zynth-text)]">Loading settings...</div>
+  if (!profile) return <div className="p-20 text-center text-[var(--zynth-text)]">We couldn&apos;t load your profile yet.</div>
 
   return (
     <div className="max-w-4xl animate-fade-up">

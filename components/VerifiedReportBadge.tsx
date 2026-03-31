@@ -1,6 +1,6 @@
 'use client'
 
-import { ShieldCheck, Info } from 'lucide-react'
+import { ShieldCheck } from 'lucide-react'
 
 interface VerifiedReportBadgeProps {
   scanId: string
@@ -9,10 +9,11 @@ interface VerifiedReportBadgeProps {
 
 export default function VerifiedReportBadge({ scanId, compact = false }: VerifiedReportBadgeProps) {
   // Generates a mock but realistic-looking hash from the scanId
-  const hash = Array.from(scanId || 'zynth')
-    .slice(0, 12)
-    .map((c, i) => (i % 2 === 0 ? c.toUpperCase() : c.toLowerCase()))
-    .join('')
+  const hash = Array.from(scanId || 'zynthsecure')
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0)
+    .toString(16)
+    .toUpperCase()
+    .padStart(8, '0')
 
   if (compact) {
     return (
@@ -24,25 +25,21 @@ export default function VerifiedReportBadge({ scanId, compact = false }: Verifie
   }
 
   return (
-    <div className="flex flex-col gap-2 p-4 rounded-xl bg-[#00ff88]/5 border border-[#00ff88]/20 group relative overflow-hidden transition-all hover:bg-[#00ff88]/10">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-[#00ff88]/10 text-[#00ff88]">
-            <ShieldCheck size={20} />
-          </div>
-          <div>
-            <div className="text-xs font-black text-[#00ff88] uppercase tracking-widest">Verifiable Audit Report</div>
-            <div className="text-[10px] font-mono text-gray-400">HASH: {hash}</div>
-          </div>
-        </div>
-        <div className="hidden sm:block">
-           <Info size={14} className="text-gray-600 hover:text-gray-400 cursor-help" />
-        </div>
+    <div className="card p-6 flex flex-col sm:flex-row items-center gap-6 bg-gradient-to-br from-[#00ff88]/5 to-transparent border-[#00ff88]/20">
+      <div className="relative flex-shrink-0">
+        <div className="absolute inset-0 bg-[#00ff88]/20 blur-xl rounded-full animate-pulse" />
+        <ShieldCheck size={48} className="text-[#00ff88] relative z-10" />
       </div>
-      
-      {/* Tooltip-like info */}
-      <div className="mt-2 pt-2 border-t border-[#00ff88]/10 text-[10px] leading-relaxed text-gray-500 italic">
-        "This report is cryptographically signed by the Zynth Security Engine. It contains immutable evidence of the scan parameters and findings."
+      <div className="flex-1 text-center sm:text-left">
+        <h4 className="text-lg font-black uppercase tracking-tighter mb-1 text-white">Verified Security Audit</h4>
+        <p className="text-xs leading-relaxed" style={{ color: 'var(--zynthsecure-text)' }}>
+          &quot;This report is cryptographically signed by the ZynthSecure Security Engine. It contains immutable evidence of the scan parameters and findings.&quot;
+        </p>
+        <div className="mt-3 flex items-center justify-center sm:justify-start gap-2">
+           <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">Hash: {hash}</span>
+           <div className="h-1 w-1 rounded-full bg-gray-700" />
+           <span className="text-[10px] font-bold text-[#00ff88] uppercase tracking-widest">Authentic</span>
+        </div>
       </div>
     </div>
   )

@@ -8,10 +8,9 @@ import ExpertRequestModal from './ExpertRequestModal'
 interface ResolutionCenterProps {
   scanId: string
   userId: string
-  url: string
 }
 
-export default function ResolutionCenter({ scanId, userId, url }: ResolutionCenterProps) {
+export default function ResolutionCenter({ scanId, userId }: ResolutionCenterProps) {
   const [isExpertModalOpen, setIsExpertModalOpen] = useState(false)
 
   return (
@@ -60,7 +59,7 @@ export default function ResolutionCenter({ scanId, userId, url }: ResolutionCent
             Next Recommended Step
           </div>
           <div className="p-3 rounded-lg bg-white/5 border border-white/5 text-xs italic text-gray-400">
-            "Download the technical brief and assign it to your lead developer. If you don't have a developer, our Zynth experts can remediate these findings for a flat fee."
+            &quot;Download the technical brief and assign it to your lead developer. If you don&apos;t have a developer, our Zynth experts can remediate these findings for a flat fee.&quot;
           </div>
         </div>
       </div>

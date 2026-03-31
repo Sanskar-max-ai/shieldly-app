@@ -3,26 +3,34 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ScanResult } from '@/types'
+import { motion } from 'framer-motion'
+import { Shield, Lock, Zap, Brain, Globe, Cpu, Smartphone, Cloud, ArrowRight } from 'lucide-react'
+import CyberBackground from '@/components/ui/CyberBackground'
 
-// ── Navbar ──────────────────────────────────────────────────────────────────
+// ── Components ─────────────────────────────────────────────────────────────
+
 function Navbar() {
+  const router = useRouter()
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
-      style={{ background: 'rgba(6,11,20,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(26,37,64,0.8)' }}>
-      <div className="flex items-center gap-2">
+    <motion.nav 
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 premium-glass"
+      style={{ borderBottom: '1px solid var(--zynthsecure-border)' }}>
+      <div 
+        className="flex items-center gap-1 cursor-pointer transition-all hover:scale-105"
+        onClick={() => router.push('/')}
+      >
         <ShieldLogo size={32} />
-        <span className="text-xl font-extrabold tracking-tight" style={{ color: 'var(--zynth-white)' }}>
-          Zynt<span style={{ color: 'var(--zynth-green)' }}>h</span>
+        <span className="text-xl font-extrabold tracking-tight" style={{ color: 'var(--zynthsecure-white)' }}>
+          Zynt<span style={{ color: 'var(--zynthsecure-green)' }}>hSecure</span>
         </span>
       </div>
       <div className="hidden md:flex items-center gap-8">
         {['Features', 'Pricing', 'FAQ'].map(item => (
           <a key={item} href={`#${item.toLowerCase()}`}
-            className="text-sm font-medium transition-colors"
-            style={{ color: 'var(--zynth-text)' }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'var(--zynth-green)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--zynth-text)')}>
+            className="text-sm font-medium transition-colors hover:text-[var(--zynthsecure-green)]"
+            style={{ color: 'var(--zynthsecure-text)' }}>
             {item}
           </a>
         ))}
@@ -31,490 +39,213 @@ function Navbar() {
         <Link href="/auth/login" className="btn-secondary text-sm px-4 py-2 font-medium">Log in</Link>
         <Link href="/auth/signup" className="btn-primary text-sm px-4 py-2">Get Free Audit</Link>
       </div>
-    </nav>
+    </motion.nav>
   )
 }
 
-// ── Shield SVG Logo ──────────────────────────────────────────────────────────
 function ShieldLogo({ size = 40 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 40 40" fill="none">
       <path d="M20 3L5 9v10c0 9.5 6.5 18.4 15 21 8.5-2.6 15-11.5 15-21V9L20 3z"
-        fill="url(#sg)" stroke="rgba(0,255,136,0.4)" strokeWidth="1" />
+        fill="url(#logo-grad)" stroke="rgba(0,255,136,0.4)" strokeWidth="1" />
       <path d="M14 20l4 4 8-8" stroke="#060b14" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
       <defs>
-        <linearGradient id="sg" x1="5" y1="3" x2="35" y2="40" gradientUnits="userSpaceOnUse">
+        <linearGradient id="logo-grad" x1="5" y1="3" x2="35" y2="40" gradientUnits="userSpaceOnUse">
           <stop stopColor="#00ff88" />
-          <stop offset="1" stopColor="#00664d" />
+          <stop offset="1" stopColor="#00d2ff" />
         </linearGradient>
       </defs>
     </svg>
   )
 }
 
-// ── Hero Section ─────────────────────────────────────────────────────────────
-function Hero() {
-  const [url, setUrl] = useState('')
-  const [scanning, setScanning] = useState(false)
-  const [scanResult, setScanResult] = useState<ScanResult | null>(null)
-  const [error, setError] = useState('')
-  const router = useRouter()
-
-  async function handleScan(e: React.FormEvent) {
-    e.preventDefault()
-    if (!url.trim()) return
-    
-    let scanUrl = url.trim()
-    if (!scanUrl.startsWith('http')) scanUrl = 'https://' + scanUrl
-
-    // Option B: Redirect to signup to capture the lead before answering
-    router.push(`/auth/signup?url=${encodeURIComponent(scanUrl)}`)
-  }
-
+function ShieldCore() {
   return (
-    <section className="hero-bg grid-bg min-h-screen flex flex-col items-center justify-center px-6 pt-24 pb-16">
-      {/* Floating badge */}
-      <div className="animate-fade-up mb-6 flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium"
-        style={{ background: 'rgba(0,255,136,0.08)', border: '1px solid rgba(0,255,136,0.2)', color: 'var(--zynth-green)' }}>
-        <span className="inline-block w-2 h-2 rounded-full animate-pulse-green" style={{ background: 'var(--zynth-green)' }} />
-        Professional AI Security Audit Service — Trusted by 500+ businesses
-      </div>
-
-      {/* Main headline */}
-      <h1 className="animate-fade-up delay-100 text-center text-5xl md:text-7xl font-black tracking-tight leading-[1.05] mb-6 max-w-4xl">
-        The Autonomous
-        <br />
-        <span style={{ color: 'var(--zynth-green)' }} className="text-glow">Remediation Engine.</span>
-        <br />
-        <span style={{ color: 'var(--zynth-text)', fontSize: '0.85em' }}>We Don't Just Find Holes. We Fix Them.</span>
-      </h1>
-
-      <p className="animate-fade-up delay-200 text-center text-lg md:text-xl max-w-2xl mb-10 leading-relaxed"
-        style={{ color: 'var(--zynth-text)' }}>
-        Zynth is the world's first AI-powered security engine that{' '}
-        <span style={{ color: 'var(--zynth-white)', fontWeight: 600 }}>identifies critical holes</span>{' '}
-        and delivers{' '}
-        <span style={{ color: 'var(--zynth-green)', fontWeight: 600 }}>One-Click patches</span>{' '}
-        to secure your infrastructure instantly. No technical knowledge required.
-      </p>
-
-      {/* Scan input */}
-      <form onSubmit={handleScan} 
-        className="animate-fade-up delay-300 w-full max-w-2xl flex flex-col sm:flex-row gap-3 mb-6">
-        <input
-          type="text"
-          value={url}
-          onChange={e => setUrl(e.target.value)}
-          placeholder="https://yourbusiness.com"
-          className="flex-1 px-5 py-4 rounded-xl text-base font-medium outline-none transition-all"
-          style={{
-            background: 'rgba(13,21,38,0.9)',
-            border: '1px solid var(--zynth-border)',
-            color: 'var(--zynth-white)',
-            caretColor: 'var(--zynth-green)',
+    <div className="relative w-64 h-64 md:w-[450px] md:h-[450px]">
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 rounded-full border border-[var(--zynthsecure-green)]/20 border-dashed"
+      />
+      <motion.div
+        animate={{ rotate: -360 }}
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-8 rounded-full border border-[var(--zynthsecure-accent)]/20 border-dashed"
+      />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <motion.div
+          animate={{ 
+            scale: [1, 1.05, 1],
+            boxShadow: [
+              "0 0 20px rgba(0, 255, 136, 0.2)",
+              "0 0 40px rgba(0, 255, 136, 0.4)",
+              "0 0 20px rgba(0, 255, 136, 0.2)"
+            ]
           }}
-          onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,255,136,0.5)')}
-          onBlur={e => (e.currentTarget.style.borderColor = 'var(--zynth-border)')}
-          disabled={scanning}
-        />
-        <button type="submit" disabled={scanning}
-          className="btn-primary px-8 py-4 font-bold text-base whitespace-nowrap flex items-center gap-2 disabled:opacity-60">
-          {scanning ? (
-            <>
-              <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="30 40" />
-              </svg>
-              Scanning...
-            </>
-          ) : (
-            <>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
-              </svg>
-              Get Free Scan Preview
-            </>
-          )}
-        </button>
-      </form>
-
-      {error && (
-        <div className="animate-fade-up w-full max-w-2xl mb-4 px-4 py-3 rounded-xl text-sm"
-          style={{ background: 'rgba(255,68,68,0.1)', border: '1px solid rgba(255,68,68,0.3)', color: '#ff8888' }}>
-          ⚠️ {error}
-        </div>
-      )}
-
-      {/* Quick scan result preview */}
-      {scanResult && <QuickResultCard result={scanResult} />}
-
-      {/* Trust signals */}
-      {!scanResult && (
-        <div className="animate-fade-up delay-400 flex flex-wrap justify-center gap-6 mt-4">
-          {[
-            { icon: '🔒', text: '$0 to start' },
-            { icon: '⚡', text: 'Results in 60 sec' },
-            { icon: '🧠', text: 'AI explains everything' },
-            { icon: '📋', text: 'No tech knowledge needed' },
-          ].map(({ icon, text }) => (
-            <div key={text} className="flex items-center gap-2 text-sm" style={{ color: 'var(--zynth-text)' }}>
-              <span>{icon}</span>
-              <span>{text}</span>
-            </div>
-          ))}
-        </div>
-      )}
-    </section>
-  )
-}
-
-// ── Quick Result Card (shown right on landing after free scan) ───────────────
-function QuickResultCard({ result }: { result: ScanResult }) {
-  const scoreColor = result.score >= 80 ? 'var(--zynth-green)' : result.score >= 50 ? 'var(--medium)' : 'var(--critical)'
-  const critical = result.issues.filter(i => i.severity === 'CRITICAL').length
-  const high = result.issues.filter(i => i.severity === 'HIGH').length
-
-  return (
-    <div className="animate-fade-up w-full max-w-2xl mt-4 card p-6 glow-green">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <div className="text-xs font-mono mb-1" style={{ color: 'var(--zynth-text)' }}>SECURITY SCORE</div>
-          <div className="text-5xl font-black" style={{ color: scoreColor }}>{result.score}<span className="text-xl">/100</span></div>
-        </div>
-        <div className="grid grid-cols-2 gap-3 text-center">
-          <div className="px-4 py-2 rounded-lg" style={{ background: 'rgba(255,68,68,0.1)', border: '1px solid rgba(255,68,68,0.2)' }}>
-            <div className="text-2xl font-bold" style={{ color: '#ff6666' }}>{critical}</div>
-            <div className="text-xs" style={{ color: 'var(--shield-text)' }}>Critical</div>
-          </div>
-          <div className="px-4 py-2 rounded-lg" style={{ background: 'rgba(255,140,0,0.1)', border: '1px solid rgba(255,140,0,0.2)' }}>
-            <div className="text-2xl font-bold" style={{ color: '#ffaa44' }}>{high}</div>
-            <div className="text-xs" style={{ color: 'var(--shield-text)' }}>High</div>
-          </div>
-        </div>
+          transition={{ duration: 4, repeat: Infinity }}
+          className="w-32 h-32 md:w-56 md:h-56 rounded-full flex items-center justify-center bg-gradient-to-br from-[#00ff88]/10 to-[#00d2ff]/10 backdrop-blur-3xl border border-white/20 relative"
+        >
+          <motion.div
+            animate={{ opacity: [0.4, 1, 0.4] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="absolute inset-0 rounded-full bg-[var(--zynthsecure-green)]/5 blur-3xl"
+          />
+          <Shield size={80} className="text-[#00ff88] relative z-10 drop-shadow-[0_0_20px_rgba(0,255,136,0.6)]" />
+        </motion.div>
       </div>
-
-      {/* Top 3 issues */}
-      <div className="space-y-2 mb-4">
-        {result.issues.slice(0, 3).map((issue, i) => (
-          <div key={i} className="flex items-start gap-3 p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--zynth-border)' }}>
-            <span className={`badge-${issue.severity.toLowerCase()} text-xs font-bold px-2 py-0.5 rounded-full uppercase flex-shrink-0`}>
-              {issue.severity}
-            </span>
-            <span className="text-sm" style={{ color: 'var(--zynth-text)' }}>
-              {issue.aiExplanation || issue.description}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <Link href="/auth/signup"
-        className="btn-primary w-full py-3 text-center font-bold block rounded-xl">
-        Request Full Audit & Fix Guide →
-      </Link>
-      <p className="text-center text-xs mt-2" style={{ color: 'var(--zynth-text)' }}>
-        Free account · No credit card · Full report in 60 seconds
-      </p>
     </div>
   )
 }
 
-// ── Stats Bar ────────────────────────────────────────────────────────────────
-function StatsBar() {
-  const stats = [
-    { value: '2,481+', label: 'Vulnerabilities found last week' },
-    { value: '532+', label: 'Websites secured' },
-    { value: '100%', label: 'Verifiable audit trail' },
-    { value: '24/7', label: 'AI monitoring active' },
-  ]
+function Hero() {
+  const [url, setUrl] = useState('')
+  const router = useRouter()
+
+  const handleScan = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!url.trim()) return
+    let scanUrl = url.trim()
+    if (!scanUrl.startsWith('http')) scanUrl = 'https://' + scanUrl
+    router.push(`/auth/signup?url=${encodeURIComponent(scanUrl)}`)
+  }
+
   return (
-    <section className="py-12 px-6" style={{ background: 'rgba(13,21,38,0.6)', borderTop: '1px solid var(--zynth-border)', borderBottom: '1px solid var(--zynth-border)' }}>
-      <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-        {stats.map(({ value, label }) => (
-          <div key={label} className="text-center">
-            <div className="text-3xl font-black mb-1" style={{ color: 'var(--zynth-green)' }}>{value}</div>
-            <div className="text-sm" style={{ color: 'var(--zynth-text)' }}>{label}</div>
+    <header className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-16 px-6 overflow-hidden">
+      <CyberBackground />
+      
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="flex flex-col items-start text-left relative z-10"
+        >
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold mb-8 premium-glass text-[var(--zynthsecure-green)] border border-[var(--zynthsecure-green)]/20 shadow-[0_0_15px_rgba(0,255,136,0.1)]">
+            <span className="w-2 h-2 rounded-full bg-[var(--zynthsecure-green)] animate-pulse" />
+            ZYNTHSECURE SENTINEL v4.1 IS LIVE
           </div>
-        ))}
-      </div>
-    </section>
-  )
-}
 
-// ── How It Works ─────────────────────────────────────────────────────────────
-function HowItWorks() {
-  const steps = [
-    { n: '01', icon: '🔗', title: 'Connect Your URL', desc: 'Enter any website URL or AI agent address. Zynth immediately initializes a deep forensic audit of your infrastructure.' },
-    { n: '02', icon: '⚡', title: 'Deep Forensic Scan', desc: 'Watch our engine perform 30+ checks in real-time, using professional-grade Nmap and Nuclei probes to find hidden holes.' },
-    { n: '03', icon: '🛠️', title: 'Auto-Remediate', desc: 'Review prioritized vulnerabilities and use Zynth\'s "One-Click Fix" to generate code patches and firewall rules instantly.' },
-    { n: '04', icon: '🛡️', title: 'Continuous Sentinel', desc: 'Enable 24/7 autonomous patrolling. Zynth watches your domain while you sleep and alerts you the second a new hole appears.' },
-  ]
-  return (
-    <section id="features" className="py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <div className="text-sm font-semibold mb-3 uppercase tracking-widest" style={{ color: 'var(--zynth-green)' }}>How It Works</div>
-          <h2 className="text-4xl md:text-5xl font-black mb-4">Security in 4 Steps</h2>
-          <p className="text-lg max-w-xl mx-auto" style={{ color: 'var(--zynth-text)' }}>We don't just find problems. We help you solve them.</p>
-        </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {steps.map(({ n, icon, title, desc }) => (
-            <div key={n} className="card p-8 text-center relative overflow-hidden">
-              <div className="absolute top-4 right-4 text-5xl font-black opacity-5" style={{ color: 'var(--zynth-green)' }}>{n}</div>
-              <div className="text-4xl mb-4">{icon}</div>
-              <h3 className="text-xl font-bold mb-3">{title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--zynth-text)' }}>{desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-5xl md:text-8xl font-black tracking-tight leading-[1.1] mb-8"
+          >
+            The Autonomous
+            <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00ff88] via-[#00d2ff] to-[#00ff88] bg-[length:200%_auto] animate-shimmer">
+              Remediation Engine.
+            </span>
+          </motion.h1>
 
-// ── Scan Types ────────────────────────────────────────────────────────────────
-function ScanTypes() {
-  const types = [
-    { icon: '🌐', title: 'Website Audit', badge: 'LAUNCH', desc: '30+ checks on any URL — privacy, hacking shields, data leaks, and brand security.', color: '#00ff88' },
-    { icon: '🔌', title: 'API Audit', badge: 'MONTH 2', desc: 'Tests REST & GraphQL APIs for deep-level security vulnerabilities.', color: '#00bfff' },
-    { icon: '💻', title: 'Code Audit', badge: 'MONTH 3', desc: 'Audits GitHub repos for hardcoded secrets, vulnerable packages, and injection risks.', color: '#a78bfa' },
-    { icon: '📱', title: 'Mobile App Audit', badge: 'MONTH 4', desc: 'Comprehensive audit of APK/IPA files for insecure storage and exposed keys.', color: '#fb923c' },
-    { icon: '🤖', title: 'AI Agent Audit', badge: '★ UNIQUE', desc: 'Exclusive testing of LLM apps for prompt injection and system leakage.', color: '#f472b6' },
-    { icon: '☁️', title: 'Cloud Config Audit', badge: 'MONTH 6', desc: 'Audits AWS, GCP, Azure for open buckets and permissive IAM roles.', color: '#fbbf24' },
-  ]
-  return (
-    <section className="py-24 px-6" style={{ background: 'rgba(13,21,38,0.4)' }}>
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-16">
-          <div className="text-sm font-semibold mb-3 uppercase tracking-widest" style={{ color: 'var(--zynth-green)' }}>6 Audit Types</div>
-          <h2 className="text-4xl md:text-5xl font-black mb-4">One Platform. Total Security.</h2>
-          <p className="text-lg max-w-xl mx-auto" style={{ color: 'var(--zynth-text)' }}>Competitors cover 1–2 audit types. Zynth covers all 6.</p>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {types.map(({ icon, title, badge, desc, color }) => (
-            <div key={title} className="card p-6">
-              <div className="flex items-start justify-between mb-4">
-                <span className="text-3xl">{icon}</span>
-                <span className="text-xs font-bold px-2 py-1 rounded-full" style={{ color, background: `${color}18`, border: `1px solid ${color}40` }}>{badge}</span>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-lg md:text-xl max-w-xl mb-12 text-[var(--zynthsecure-text)] leading-relaxed"
+          >
+            ZynthSecure is the world&apos;s first AI-powered security engine that identifies critical holes and delivers <span className="text-white font-bold underline decoration-[var(--zynthsecure-green)] decoration-2 underline-offset-4">One-Click patches</span> to secure your infrastructure instantly.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="w-full max-w-lg"
+          >
+            <form onSubmit={handleScan} className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1 relative group">
+                <input
+                  type="text"
+                  value={url}
+                  onChange={e => setUrl(e.target.value)}
+                  placeholder="https://yourbusiness.com"
+                  className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 outline-none focus:border-[var(--zynthsecure-green)] transition-all text-white font-medium backdrop-blur-md group-hover:bg-white/[0.08]"
+                />
+                <div className="absolute inset-0 rounded-2xl border border-[var(--zynthsecure-green)]/0 pointer-events-none group-focus-within:border-[var(--zynthsecure-green)]/30 transition-all scale-[1.02] opacity-0 group-focus-within:opacity-100" />
               </div>
-              <h3 className="font-bold text-lg mb-2">{title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--zynth-text)' }}>{desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// ── Pricing ───────────────────────────────────────────────────────────────────
-function Pricing() {
-  const plans = [
-    {
-      name: 'Free', price: '$0', period: '/month', highlight: false,
-      features: ['3 scans/month', '1 domain', 'Basic report (no AI)', 'Website scanner only'],
-      cta: 'Get Started Free', ctaHref: '/auth/signup',
-    },
-    {
-      name: 'Starter', price: '$19', period: '/month', highlight: false,
-      features: ['25 scans/month', '3 domains', 'Full AI explanations', 'Step-by-step fix guides', 'PDF export', 'Weekly email reports'],
-      cta: 'Start Starter', ctaHref: '/auth/signup',
-    },
-    {
-      name: 'Professional', price: '$49', period: '/month', highlight: true,
-      features: ['Unlimited scans', '25 domains', 'All 6 scan types', 'AI Chat Assistant', 'API access + CI/CD', 'Slack/Discord alerts', 'Compliance reports'],
-      cta: 'Start Professional', ctaHref: '/auth/signup',
-    },
-    {
-      name: 'Agency', price: '$149', period: '/month', highlight: false,
-      features: ['Unlimited everything', 'All clients dashboard', 'White-label PDF reports', 'Bulk scan all clients', 'Team accounts (3 users)', 'Priority support'],
-      cta: 'Start Agency', ctaHref: '/auth/signup',
-    },
-    {
-      name: 'Agency Annual', price: '$9,900', period: '/year', highlight: false,
-      features: ['Everything in Agency', '12-month commitment', '$825/mo equivalent', 'Dedicated account manager', 'SLA guarantee', 'Quarterly review calls', 'Custom compliance'],
-      badge: 'BEST FOR AGENCIES',
-      cta: 'Talk to Sales', ctaHref: 'mailto:sales@zynthsecure.com',
-    },
-  ]
-  return (
-    <section id="pricing" className="py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <div className="text-sm font-semibold mb-3 uppercase tracking-widest" style={{ color: 'var(--zynth-green)' }}>Pricing</div>
-          <h2 className="text-4xl md:text-5xl font-black mb-4">Start Free. Scale as You Grow.</h2>
-          <p className="text-lg max-w-xl mx-auto" style={{ color: 'var(--zynth-text)' }}>
-            Competitors charge $199–$50,000/month. Zynth starts at $0.
-          </p>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 items-start">
-          {plans.map(plan => (
-            <div key={plan.name}
-              className={`card p-6 flex flex-col relative ${plan.highlight ? 'glow-green' : ''}`}
-              style={plan.highlight ? { borderColor: 'rgba(0,255,136,0.5)' } : {}}>
-              {'badge' in plan && plan.badge && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-1 rounded-full"
-                  style={{ background: 'var(--zynth-green)', color: '#060b14' }}>
-                  {plan.badge}
-                </div>
-              )}
-              {plan.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-1 rounded-full"
-                  style={{ background: 'var(--zynth-green)', color: '#060b14' }}>
-                  MOST POPULAR
-                </div>
-              )}
-              <div className="mb-4">
-                <div className="text-sm font-semibold mb-2" style={{ color: 'var(--shield-text)' }}>{plan.name}</div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-black">{plan.price}</span>
-                  <span className="text-sm" style={{ color: 'var(--shield-text)' }}>{plan.period}</span>
-                </div>
-              </div>
-              <ul className="space-y-2 mb-6 flex-1">
-                {plan.features.map(f => (
-                  <li key={f} className="flex items-start gap-2 text-sm" style={{ color: 'var(--zynth-text)' }}>
-                    <span style={{ color: 'var(--zynth-green)', flexShrink: 0 }}>✓</span>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <a href={plan.ctaHref}
-                className={`${plan.highlight ? 'btn-primary' : 'btn-secondary'} px-4 py-2.5 text-sm font-semibold text-center block rounded-xl`}>
-                {plan.cta}
-              </a>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// ── Vulnerability Checklist ───────────────────────────────────────────────────
-function VulnerabilityChecklist() {
-  const categories = [
-    {
-      title: 'Privacy & Data Encryption',
-      checks: ['Expired SSL Certificate', 'Expiring Soon SSL (30 Days)', 'Enforcement of secure connections', 'Redirection of insecure links', 'Weak Encryption (Outdated SSL)']
-    },
-    {
-      title: 'Anti-Hacking Shields',
-      checks: ['Protection against malicious scripts', 'Secure connection policy', 'Protection against Clickjacking attacks', 'Protection against content spoofing', 'Private Server Information']
-    },
-    {
-      title: 'Data Leak Prevention',
-      checks: ['Leaked Configuration Files', 'Leaked Database Backups', 'Exposed Development History', 'Exposed Backup (ZIP) Files', 'Exposed Server Debug Info']
-    },
-    {
-      title: 'Email & Identity Security',
-      checks: ['Protection against email impersonation', 'Shielding your Brand\'s Identity']
-    }
-  ]
-
-  return (
-    <section className="py-32 px-6 border-y" style={{ background: 'rgba(2,6,23,0.5)', borderColor: 'var(--zynth-border)' }}>
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-20">
-          <div className="text-xs font-bold mb-4 uppercase tracking-[0.3em]" style={{ color: 'var(--zynth-secondary)' }}>Checklist</div>
-          <h2 className="text-4xl md:text-6xl font-black mb-6">Deep Analysis Vector</h2>
-          <p className="text-lg max-w-xl mx-auto opacity-70" style={{ color: 'var(--zynth-text)' }}>
-            Every scan executes 17+ critical tests across your infrastructure path.
-          </p>
-        </div>
-        
-        <div className="grid md:grid-cols-2 gap-8">
-          {categories.map((cat, i) => (
-            <div key={i} className="card p-8 bg-gradient-to-br from-white/5 to-transparent">
-              <h3 className="text-lg font-bold mb-6 flex items-center gap-3">
-                <span className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/5" style={{ color: 'var(--zynth-green)' }}>{i + 1}</span>
-                {cat.title}
-              </h3>
-              <ul className="space-y-4">
-                {cat.checks.map(check => (
-                  <li key={check} className="flex items-start gap-3 text-sm">
-                    <svg className="shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--zynth-green)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <span style={{ color: 'var(--zynth-white)' }}>{check}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// ── Why Zynth Wins ────────────────────────────────────────────────────────────
-function WhyZynth() {
-  const rows = [
-    { factor: 'Price', them: '$119–$50,000+/month', us: '$0–$149/month' },
-    { factor: 'Verifiable Evidence', them: '✗ Black-box results', us: '✓ Live terminal + Signed hash' },
-    { factor: 'Plain English Reports', them: '✗ Raw technical output', us: '✓ AI explains everything' },
-    { factor: 'Human-in-the-Loop Fixes', them: '✗ You are on your own', us: '✓ Hire an expert path' },
-    { factor: 'Fix Instructions', them: 'Vague or none', us: 'Step-by-step, platform-specific' },
-    { factor: 'Setup Required', them: 'Technical expertise needed', us: 'Paste URL. Done.' },
-    { factor: 'Insurance Ready', them: '✗ Requires enterprise audit', us: '✓ Baseline compliance pre-check' },
-  ]
-  return (
-    <section className="py-24 px-6" style={{ background: 'rgba(13,21,38,0.4)' }}>
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="text-sm font-semibold mb-3 uppercase tracking-widest" style={{ color: 'var(--zynth-green)' }}>Competitive Edge</div>
-          <h2 className="text-4xl font-black mb-4">Why Zynth Wins</h2>
-        </div>
-        <div className="card overflow-hidden">
-          <div className="grid grid-cols-3 px-6 py-3 text-xs font-bold uppercase tracking-wider"
-            style={{ background: 'rgba(0,255,136,0.05)', borderBottom: '1px solid var(--zynth-border)', color: 'var(--zynth-text)' }}>
-            <span>Factor</span><span>Competitors</span><span style={{ color: 'var(--zynth-green)' }}>Zynth</span>
-          </div>
-          {rows.map((row, i) => (
-            <div key={i} className="grid grid-cols-3 px-6 py-4 text-sm gap-4"
-              style={{ borderBottom: i < rows.length - 1 ? '1px solid var(--zynth-border)' : 'none' }}>
-              <span className="font-medium">{row.factor}</span>
-              <span style={{ color: 'var(--zynth-text)' }}>{row.them}</span>
-              <span style={{ color: 'var(--zynth-green)', fontWeight: 600 }}>{row.us}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// ── FAQ ───────────────────────────────────────────────────────────────────────
-function FAQ() {
-  const [open, setOpen] = useState<number | null>(null)
-  const faqs = [
-    { q: 'Is this legal? Can I scan any website?', a: 'You can scan websites you own. Zynth requires domain verification (proving you own the domain) before running a full scan. The free preview scan is read-only and only checks public information.' },
-    { q: 'I have zero technical knowledge. Will I understand the reports?', a: 'Yes — that\'s exactly why Zynth exists. Our AI explains every finding in plain English, like "Your website\'s front door doesn\'t have a lock." and then gives you step-by-step fix instructions for your exact platform.' },
-    { q: 'How is this different from free tools like SSL Labs?', a: 'SSL Labs checks one thing. Zynth runs 30+ checks across SSL, security headers, exposed files, malware, DNS, and more — then uses AI to explain everything and prioritize what to fix first.' },
-    { q: 'I\'m a web agency. How does the Agency plan work?', a: 'You get one dashboard showing all your clients, their security scores, and any critical issues. You can white-label the PDF reports with your agency\'s logo and send them to clients as your own security service.' },
-    { q: 'What is the AI Agent Scanner?', a: 'If you have an AI chatbot or LLM-powered app, we test it for prompt injection attacks, jailbreaks, and system prompt leakage. This is brand new — almost no commercial tool offers this. It\'s available on Professional plan and above.' },
-    { q: 'How much does it actually cost at scale?', a: 'Free forever for basic scanning. Paid plans start at $19/month. If you\'re an agency with 20 clients, the Agency Annual plan at $9,900/year ($825/month equiv.) gives you unlimited scanning for all clients with white-label reports.' },
-  ]
-  return (
-    <section id="faq" className="py-24 px-6">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="text-sm font-semibold mb-3 uppercase tracking-widest" style={{ color: 'var(--zynth-green)' }}>FAQ</div>
-          <h2 className="text-4xl font-black">Common Questions</h2>
-        </div>
-        <div className="space-y-3">
-          {faqs.map((faq, i) => (
-            <div key={i} className="card overflow-hidden">
-              <button onClick={() => setOpen(open === i ? null : i)}
-                className="w-full px-6 py-5 text-left flex items-center justify-between gap-4">
-                <span className="font-semibold text-sm md:text-base">{faq.q}</span>
-                <span style={{ color: 'var(--zynth-green)', flexShrink: 0, transition: 'transform 0.2s', transform: open === i ? 'rotate(45deg)' : 'rotate(0deg)', fontSize: '1.5rem', lineHeight: 1 }}>+</span>
+              <button type="submit" className="btn-primary px-8 py-4 flex items-center justify-center gap-2 group whitespace-nowrap">
+                Initialize Audit
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </button>
-              {open === i && (
-                <div className="px-6 pb-5 text-sm leading-relaxed" style={{ color: 'var(--zynth-text)', borderTop: '1px solid var(--zynth-border)' }}>
-                  <div className="pt-4">{faq.a}</div>
+            </form>
+
+            <div className="flex flex-wrap gap-6 mt-10 opacity-50">
+              {[
+                { icon: Zap, text: '60-Sec Result' },
+                { icon: Brain, text: 'AI-Generated Fixes' },
+                { icon: Lock, text: 'No CC Required' }
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-black text-white">
+                  <item.icon size={14} className="text-[#00ff88]" /> {item.text}
                 </div>
-              )}
+              ))}
             </div>
+          </motion.div>
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, delay: 0.4, ease: "circOut" }}
+          className="flex items-center justify-center relative select-none"
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,210,255,0.1)_0%,transparent_70%)] blur-3xl animate-pulse" />
+          <ShieldCore />
+        </motion.div>
+      </div>
+      
+      <motion.div 
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-20 hidden md:block"
+      >
+        <div className="w-px h-16 bg-gradient-to-b from-transparent via-[var(--zynthsecure-green)] to-transparent" />
+      </motion.div>
+    </header>
+  )
+}
+
+function FeatureGrid() {
+  const features = [
+    { n: '01', icon: Globe, title: 'Website Audit', desc: 'Deep forensic scan of any URL — privacy, hacking shields, and brand security.' },
+    { n: '02', icon: Cpu, title: 'API Security', desc: 'Automated testing for REST/GraphQL APIs and prompt injection detection.' },
+    { n: '03', icon: Smartphone, title: 'Mobile Audit', desc: 'Analyzes APK/IPA binaries for insecure storage and exposed API keys.' },
+    { n: '04', icon: Cloud, title: 'Cloud Sentinel', desc: 'Audits AWS/GCP config for exposed buckets and permissive IAM roles.' },
+  ]
+
+  return (
+    <section id="features" className="py-32 px-6 relative">
+      <div className="max-w-7xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="text-center mb-20"
+        >
+          <h2 className="text-3xl md:text-5xl font-black mb-4">Autonomous Capability Hub</h2>
+          <p className="text-[var(--zynthsecure-text)] max-w-xl mx-auto">ZynthSecure covers every vector of your digital infrastructure path.</p>
+        </motion.div>
+        
+        <div className="grid lg:grid-cols-4 gap-6">
+          {features.map((f, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="card p-10 group"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-8 group-hover:bg-[var(--zynthsecure-green)]/10 group-hover:scale-110 transition-all duration-500">
+                <f.icon className="text-[var(--zynthsecure-green)]" size={28} />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">{f.title}</h3>
+              <p className="text-sm text-[var(--zynthsecure-text)] leading-relaxed group-hover:text-white transition-colors">{f.desc}</p>
+              <div className="mt-8 flex items-center gap-2 text-[var(--zynthsecure-green)] font-bold text-xs opacity-0 group-hover:opacity-100 transition-opacity translate-x-[-10px] group-hover:translate-x-0 transition-transform">
+                EXPLORE STACK <ArrowRight size={14} />
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -522,40 +253,150 @@ function FAQ() {
   )
 }
 
-// ── Footer ────────────────────────────────────────────────────────────────────
+function Comparison() {
+  const rows = [
+    { factor: 'Forensic Speed', them: '1-3 Weeks', us: '60 Seconds' },
+    { factor: 'Actionability', them: 'Raw Tech Report', us: 'Step-by-step Fixes' },
+    { factor: 'Remediation', them: 'Hire Developers', us: 'One-Click Patches' },
+    { factor: 'Audit Integrity', them: 'Subjective Review', us: 'Signed Forensic Logic' },
+    { factor: 'Cost Basis', them: '$5,000+ Setup', us: '$0 Initialization' },
+  ]
+
+  return (
+    <section className="py-32 px-6 relative">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="max-w-5xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="text-center mb-20"
+        >
+          <span className="text-xs font-black tracking-[0.3em] text-[var(--zynthsecure-green)] uppercase mb-4 block">Benchmark Audit</span>
+          <h2 className="text-4xl md:text-6xl font-black mb-6">Why ZynthSecure Wins</h2>
+          <p className="text-[var(--zynthsecure-text)] max-w-2xl mx-auto">Traditional forensic firms can&apos;t compete with autonomous code-speed.</p>
+        </motion.div>
+        
+        <div className="card overflow-visible p-1 pointer-events-none sm:pointer-events-auto">
+          <div className="grid grid-cols-3 p-8 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--zynthsecure-text)] border-b border-white/5 opacity-50">
+            <div>Vector</div><div>Traditional Firms</div><div className="text-[#00ff88]">ZynthSecure AI</div>
+          </div>
+          {rows.map((r, i) => (
+            <motion.div 
+              key={i}
+              whileHover={{ x: 10 }}
+              className="grid grid-cols-3 p-8 border-b border-white/5 last:border-0 hover:bg-white/[0.03] transition-all cursor-default"
+            >
+              <div className="font-bold text-sm md:text-base">{r.factor}</div>
+              <div className="text-sm text-[var(--zynthsecure-text)]">{r.them}</div>
+              <div className="text-sm md:text-base font-black text-[#00ff88] drop-shadow-[0_0_10px_rgba(0,255,136,0.3)]">{r.us}</div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function CTA() {
+  return (
+    <section className="py-32 px-6">
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="max-w-6xl mx-auto rounded-[3rem] overflow-hidden relative p-16 md:p-32 text-center"
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-[#00ff88]/30 via-[#00d2ff]/20 to-[#00ff88]/30 animate-plasma animate-[spin_20s_linear_infinite] opacity-40 blur-3xl scale-150" />
+        <div className="absolute inset-0 premium-glass border border-white/10" />
+        
+        <div className="relative z-10">
+          <motion.h2 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="text-5xl md:text-8xl font-black mb-10 leading-[0.9] tracking-tighter"
+          >
+            NO MORE
+            <br />
+            GUESSWORK.
+          </motion.h2>
+          <p className="max-w-xl mx-auto text-lg md:text-xl text-white/70 mb-14 leading-relaxed">
+            Deploy the world&apos;s most advanced autonomous security engine. Get your first comprehensive audit in under 60 seconds.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link href="/auth/signup" className="btn-primary px-12 py-5 text-xl">Initialize Sentinel Audit</Link>
+            <Link href="#pricing" className="btn-secondary px-12 py-5 text-xl font-bold">Platform Pricing</Link>
+          </div>
+          
+          <div className="mt-16 flex items-center justify-center gap-12 opacity-30 grayscale contrast-200">
+            {['SOC2', 'GDPR', 'HIPAA', 'PCI'].map(t => (
+              <span key={t} className="text-2xl font-black">{t}</span>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </section>
+  )
+}
+
 function Footer() {
   return (
-    <footer className="py-12 px-6" style={{ borderTop: '1px solid var(--zynth-border)' }}>
-      <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-2">
-          <ShieldLogo size={28} />
-          <span className="font-bold">Zynth Security</span>
-          <span className="text-sm ml-4" style={{ color: 'var(--zynth-text)' }}>AI Security for Everyone</span>
+    <footer className="py-16 px-6 border-t border-white/5 bg-[#060b14]">
+      <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 mb-16">
+        <div className="col-span-2">
+          <div className="flex items-center gap-2 mb-6">
+            <ShieldLogo size={28} />
+            <span className="text-2xl font-black">ZynthSecure</span>
+          </div>
+          <p className="text-[var(--zynthsecure-text)] max-w-sm mb-8 leading-relaxed">
+            The global baseline for autonomous security remediation. We don&apos;t just find holes. We fix them while you sleep.
+          </p>
+          <div className="flex gap-4">
+             {/* Social placeholders */}
+             {[1,2,3].map(i => <div key={i} className="w-10 h-10 rounded-full bg-white/5 border border-white/10" />)}
+          </div>
         </div>
-        <div className="flex gap-8 text-sm" style={{ color: 'var(--zynth-text)' }}>
-          <a href="#" className="hover:text-white transition-colors">Privacy</a>
-          <a href="#" className="hover:text-white transition-colors">Terms</a>
-          <a href="mailto:hello@zynthsecure.com" className="hover:text-white transition-colors">Contact</a>
+        <div>
+          <h4 className="font-bold mb-6 text-white uppercase text-xs tracking-widest">Platform</h4>
+          <ul className="space-y-4 text-sm text-[var(--zynthsecure-text)]">
+            <li><Link href="/" className="hover:text-white transition-colors">Audit Engine</Link></li>
+            <li><Link href="/" className="hover:text-white transition-colors">Remediation Hub</Link></li>
+            <li><Link href="/" className="hover:text-white transition-colors">Expert Network</Link></li>
+          </ul>
         </div>
-        <div className="text-sm" style={{ color: 'var(--zynth-text)' }}>© 2026 Zynth Security. All rights reserved.</div>
+        <div>
+          <h4 className="font-bold mb-6 text-white uppercase text-xs tracking-widest">Legal</h4>
+          <ul className="space-y-4 text-sm text-[var(--zynthsecure-text)]">
+            <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link></li>
+            <li><Link href="/terms" className="hover:text-white transition-colors">Terms</Link></li>
+            <li><Link href="/security" className="hover:text-white transition-colors">Security Schema</Link></li>
+          </ul>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/5 opacity-50">
+        <div className="text-xs">© 2026 ZynthSecure AI. All rights reserved.</div>
+        <div className="text-xs flex gap-6 mt-4 md:mt-0">
+          <span>LATENCY: 14ms</span>
+          <span>UPTIME: 100.00%</span>
+        </div>
       </div>
     </footer>
   )
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
+// ── Page ───────────────────────────────────────────────────────────────────
+
 export default function HomePage() {
   return (
-    <main>
+    <main className="bg-[#060b14] text-white selection:bg-[#00ff88] selection:text-black min-h-screen">
       <Navbar />
       <Hero />
-      <StatsBar />
-      <HowItWorks />
-      <VulnerabilityChecklist />
-      <ScanTypes />
-      <WhyZynth />
-      <Pricing />
-      <FAQ />
+      <div className="relative">
+        <div className="absolute top-0 left-0 right-0 h-96 bg-gradient-to-b from-blue-500/10 to-transparent pointer-events-none" />
+        <FeatureGrid />
+        <Comparison />
+        <CTA />
+      </div>
       <Footer />
     </main>
   )

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Zap, CheckCircle, AlertTriangle, X } from 'lucide-react'
+import { Zap, CheckCircle, X } from 'lucide-react'
 import HackerTerminal from './HackerTerminal'
 import { useRouter } from 'next/navigation'
 
@@ -32,7 +32,6 @@ export default function RemediationButton({
   isFixed, 
   autoRemediable 
 }: RemediationButtonProps) {
-  const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(isFixed)
   const [showTerminal, setShowTerminal] = useState(false)
   const router = useRouter()
@@ -75,7 +74,6 @@ export default function RemediationButton({
     <>
       <button 
         onClick={handleFix}
-        disabled={loading}
         className="flex items-center gap-2 bg-[#00ff88] text-black hover:bg-[#00e67a] px-4 py-2 rounded-lg font-black text-xs uppercase tracking-tighter transition-all transform hover:scale-105 active:scale-95 shadow-[0_4px_20px_rgba(0,255,136,0.3)]"
       >
         <Zap size={14} fill="currentColor" />

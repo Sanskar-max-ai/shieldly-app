@@ -2,12 +2,12 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Zynth — AI-Powered Security Audit Service',
-  description: 'Instant security audits for your digital infrastructure. Zynth uses advanced AI to find vulnerabilities in websites, APIs, and AI agents before hackers do.',
-  keywords: 'security audit, Zynth, cyber security, AI security, vulnerability scanner, penetration testing, zynthsecure',
-  authors: [{ name: 'Zynth Security' }],
+  title: 'ZynthSecure — AI-Powered Security Audit Service',
+  description: 'Proactive remediation and security auditing for digital infrastructure. ZynthSecure uses advanced AI to find vulnerabilities in websites, APIs, and AI agents before hackers do.',
+  keywords: 'security audit, ZynthSecure, cyber security, AI security, vulnerability scanner, penetration testing, zynthsecure',
+  authors: [{ name: 'ZynthSecure Security' }],
   openGraph: {
-    title: 'Zynth — AI Security Audit',
+    title: 'ZynthSecure — AI Security Audit',
     description: 'Professional security audits in under 2 minutes. No technical knowledge needed.',
     type: 'website',
     url: 'https://zynthsecure.com',
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Zynth — AI Security',
+    title: 'ZynthSecure — AI Security',
     description: 'Instant AI-powered security audits for small businesses.',
   },
   icons: {

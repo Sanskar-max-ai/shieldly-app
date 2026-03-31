@@ -1,80 +1,69 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-import { createClient } from '@/utils/supabase/client'
-import { Shield, AlertCircle, Search, Terminal, Lock } from 'lucide-react'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { Shield, AlertCircle, Terminal, Lock } from 'lucide-react'
+import { createClient } from '@/utils/supabase/server'
+import { getAdminEmails, isAdminEmail } from '@/utils/auth/admin'
 
-export default function AdminCommandCenter() {
-  const [authorized, setAuthorized] = useState(false)
-  const [superKey, setSuperKey] = useState('')
-  const [scans, setScans] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
+type AdminScan = {
+  id: string
+  url: string
+  score: number | null
+  status: string
+  started_at: string
+  profiles: {
+    full_name: string | null
+    email: string | null
+  } | null
+}
 
-  // THE SUPER KEY - IN PROD THIS SHOULD BE IN AN ENV VARIABLE
-  const ZYNTH_SUPER_KEY = 'ZYNTH_2026_ELITE'
-
-  useEffect(() => {
-    if (authorized) {
-      fetchGlobalScans()
-    }
-  }, [authorized])
-
-  async function fetchGlobalScans() {
-    const supabase = createClient()
-    const { data, error } = await supabase
-      .from('scans')
-      .select('*, profiles(full_name, email)')
-      .order('created_at', { ascending: false })
-      .limit(50)
-
-    if (data) setScans(data)
-    setLoading(false)
-  }
-
-  function handleAuth() {
-    if (superKey === ZYNTH_SUPER_KEY) {
-      setAuthorized(true)
-    } else {
-      alert('INVALID SUPER KEY - ACCESS DENIED')
-    }
-  }
-
-  if (!authorized) {
-    return (
-      <div className="min-h-screen bg-[#060b14] flex items-center justify-center p-6">
-        <div className="max-w-md w-full card p-8 border-[#00ff88]/20 shadow-[0_0_50px_rgba(0,255,136,0.05)]">
-          <div className="flex justify-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-[#00ff88]/10 flex items-center justify-center border border-[#00ff88]/30">
-              <Shield size={32} className="text-[#00ff88]" />
-            </div>
-          </div>
-          <h1 className="text-2xl font-black text-center text-white mb-2 uppercase tracking-tighter">Zynth Command Center</h1>
-          <p className="text-center text-gray-500 text-sm mb-8">Enter the Super Key to initialize administrative uplink.</p>
-          
-          <div className="space-y-4">
-            <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-              <input 
-                type="password" 
-                placeholder="SUPER KEY" 
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white font-mono focus:border-[#00ff88]/50 transition-all outline-none"
-                value={superKey}
-                onChange={(e) => setSuperKey(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleAuth()}
-              />
-            </div>
-            <button 
-              onClick={handleAuth}
-              className="w-full py-4 bg-[#00ff88] text-black font-black uppercase tracking-widest rounded-xl hover:shadow-[0_0_30px_rgba(0,255,136,0.3)] transition-all active:scale-[0.98]"
-            >
-              Initialize Uplink
-            </button>
+function LockedAdminState({ description }: { description: string }) {
+  return (
+    <div className="min-h-screen bg-[#060b14] flex items-center justify-center p-6">
+      <div className="max-w-md w-full card p-8 border-[#00ff88]/20 shadow-[0_0_50px_rgba(0,255,136,0.05)]">
+        <div className="flex justify-center mb-8">
+          <div className="w-16 h-16 rounded-2xl bg-[#00ff88]/10 flex items-center justify-center border border-[#00ff88]/30">
+            <Lock size={32} className="text-[#00ff88]" />
           </div>
         </div>
+        <h1 className="text-2xl font-black text-center text-white mb-2 uppercase tracking-tighter">Zynth Command Center</h1>
+        <p className="text-center text-gray-500 text-sm mb-8">{description}</p>
+        <div className="flex justify-center">
+          <Link href="/dashboard" className="btn-secondary px-6 py-3 text-sm font-bold">
+            Return to Dashboard
+          </Link>
+        </div>
       </div>
+    </div>
+  )
+}
+
+export default async function AdminCommandCenter() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/auth/login')
+  }
+
+  if (getAdminEmails().length === 0) {
+    return (
+      <LockedAdminState description="Set ADMIN_EMAILS in your environment to enable the administrative command center." />
     )
   }
+
+  if (!isAdminEmail(user.email)) {
+    return (
+      <LockedAdminState description="Your account is authenticated, but it has not been granted admin access." />
+    )
+  }
+
+  const { data } = await supabase
+    .from('scans')
+    .select('id, url, score, status, started_at, profiles(full_name, email)')
+    .order('started_at', { ascending: false })
+    .limit(50)
+
+  const scans = (data ?? []) as unknown as AdminScan[]
 
   return (
     <div className="min-h-screen bg-[#060b14] text-white font-sans p-6 sm:p-12">
@@ -82,7 +71,7 @@ export default function AdminCommandCenter() {
         <header className="flex flex-col sm:flex-row items-center justify-between mb-12 gap-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-[#00ff88]/10 flex items-center justify-center border border-[#00ff88]/20">
-              <Terminal size={24} className="text-[#00ff88]" />
+              <Shield size={24} className="text-[#00ff88]" />
             </div>
             <div>
               <h1 className="text-3xl font-black uppercase tracking-tighter">Zynth Command Center</h1>
@@ -92,7 +81,7 @@ export default function AdminCommandCenter() {
               </div>
             </div>
           </div>
-          
+
           <div className="flex gap-4">
             <div className="card px-6 py-4 border-white/5 bg-white/[0.02]">
               <div className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Total Scans</div>
@@ -122,9 +111,9 @@ export default function AdminCommandCenter() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5 font-mono text-xs">
-                  {loading ? (
+                  {scans.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-6 py-12 text-center text-gray-500 italic">Accessing database records...</td>
+                      <td colSpan={6} className="px-6 py-12 text-center text-gray-500 italic">No scans have been recorded yet.</td>
                     </tr>
                   ) : scans.map((scan) => (
                     <tr key={scan.id} className="hover:bg-white/[0.02] transition-colors">
@@ -134,12 +123,12 @@ export default function AdminCommandCenter() {
                       </td>
                       <td className="px-6 py-4 uppercase tracking-tighter text-[#00ff88] font-black">{scan.url}</td>
                       <td className="px-6 py-4">
-                        <span className={`px-2 py-1 rounded text-[10px] font-bold ${scan.score >= 90 ? 'bg-[#00ff88]/10 text-[#00ff88]' : 'bg-red-500/10 text-red-500'}`}>
-                          {scan.score}/100
+                        <span className={`px-2 py-1 rounded text-[10px] font-bold ${(scan.score ?? 0) >= 90 ? 'bg-[#00ff88]/10 text-[#00ff88]' : 'bg-red-500/10 text-red-500'}`}>
+                          {scan.score ?? 0}/100
                         </span>
                       </td>
                       <td className="px-6 py-4 uppercase text-[10px] font-black tracking-widest">{scan.status}</td>
-                      <td className="px-6 py-4 text-gray-500">{new Date(scan.created_at).toLocaleString()}</td>
+                      <td className="px-6 py-4 text-gray-500">{new Date(scan.started_at).toLocaleString()}</td>
                       <td className="px-6 py-4 text-right">
                         <Link href={`/dashboard/scan/${scan.id}`} className="text-[#00ff88] hover:underline">View Forensic Detail</Link>
                       </td>
@@ -148,6 +137,16 @@ export default function AdminCommandCenter() {
                 </tbody>
               </table>
             </div>
+          </div>
+
+          <div className="card p-6 border-white/10 bg-white/[0.02]">
+            <div className="flex items-center gap-3 text-[#00ff88] mb-3">
+              <Terminal size={18} />
+              <span className="text-xs font-black uppercase tracking-widest">Admin Access Model</span>
+            </div>
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Admin access is now controlled by the server-side ADMIN_EMAILS environment variable instead of a client-side shared secret.
+            </p>
           </div>
         </div>
       </div>
