@@ -15,7 +15,7 @@ export default function SecurityTutor({ scanId }: { scanId: string }) {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -25,7 +25,9 @@ export default function SecurityTutor({ scanId }: { scanId: string }) {
   }, [isOpen])
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+    }
   }, [messages])
 
   async function loadHistory() {
@@ -107,7 +109,8 @@ export default function SecurityTutor({ scanId }: { scanId: string }) {
 
         {/* Messages - Scrollable with Flex Grow */}
         <div 
-          className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scrollbar-thin scrollbar-thumb-white/5 scroll-smooth"
+          ref={messagesContainerRef}
+          className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scrollbar-thin scrollbar-thumb-white/5 overscroll-contain"
           id="chat-messages-container"
         >
           {messages.length === 0 && !isLoading && (
@@ -157,7 +160,6 @@ export default function SecurityTutor({ scanId }: { scanId: string }) {
               <p>{error}</p>
             </div>
           )}
-          <div ref={messagesEndRef} className="h-4 w-full" />
         </div>
 
         {/* Input - Fixed at Bottom of Sidebar */}

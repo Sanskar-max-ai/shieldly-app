@@ -5,10 +5,19 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
+  
+  // More robust session check for App Router API routes
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+  
+  if (sessionError || !session) {
+    console.error('Zynth Auth Error: No session found', sessionError)
+    return NextResponse.json({ error: 'Unauthorized: Session missing' }, { status: 401 })
+  }
+
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json({ error: 'Unauthorized: User missing' }, { status: 401 })
   }
 
   const { scanId, message } = await req.json()
