@@ -12,6 +12,7 @@ type BillingProfile = {
 export default function BillingPage() {
   const [profile, setProfile] = useState<BillingProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null)
 
   useEffect(() => {
     const supabase = createClient()
@@ -35,10 +36,32 @@ export default function BillingPage() {
   if (loading) return <div className="animate-pulse p-20 text-center text-[var(--zynth-text)]">Finding billing info...</div>
 
   const plans = [
-    { name: 'Starter', price: '$19', features: ['25 scans/mo', '3 domains', 'PDF reports', 'Weekly emails'] },
-    { name: 'Professional', price: '$49', features: ['Unlimited scans', '25 domains', 'AI Assistant', 'API Access'], highlight: true },
-    { name: 'Agency', price: '$149', features: ['Unlimited everything', 'White-label PDF', 'Team accounts', 'Priority support'] },
+    { id: 'price_starter', name: 'Starter', price: '$19', features: ['25 scans/mo', '3 domains', 'PDF reports', 'Weekly emails'] },
+    { id: 'price_pro', name: 'Professional', price: '$49', features: ['Unlimited scans', '25 domains', 'AI Assistant', 'API Access'], highlight: true },
+    { id: 'price_agency', name: 'Agency', price: '$149', features: ['Unlimited everything', 'White-label PDF', 'Team accounts', 'Priority support'] },
   ]
+
+  const handleCheckout = async (priceId: string, planName: string) => {
+    try {
+      setCheckoutLoading(planName)
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId }),
+      })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        throw new Error(data.error || 'Failed to create checkout session')
+      }
+    } catch (error) {
+      console.error(error)
+      alert("Billing is currently down for maintenance. Please check back later.")
+    } finally {
+      setCheckoutLoading(null)
+    }
+  }
 
   return (
     <div className="max-w-5xl mx-auto animate-fade-up">
@@ -79,8 +102,13 @@ export default function BillingPage() {
                 </li>
               ))}
             </ul>
-            <button className={`${plan.highlight ? 'btn-primary' : 'btn-secondary'} w-full py-3 text-sm font-bold`}>
-              {profile?.plan === plan.name.toLowerCase() ? 'Current Plan' : `Upgrade to ${plan.name}`}
+            <button 
+              onClick={() => handleCheckout(plan.id, plan.name)}
+              disabled={checkoutLoading !== null || profile?.plan === plan.name.toLowerCase()}
+              className={`${plan.highlight ? 'btn-primary' : 'btn-secondary'} w-full py-3 text-sm font-bold disabled:opacity-50 transition-all flex justify-center items-center gap-2`}>
+              {checkoutLoading === plan.name ? (
+                <><span className="animate-spin w-4 h-4 rounded-full border-2 border-current border-t-transparent" /> Proceeding...</>
+              ) : profile?.plan === plan.name.toLowerCase() ? 'Current Plan' : `Upgrade to ${plan.name}`}
             </button>
           </div>
         ))}

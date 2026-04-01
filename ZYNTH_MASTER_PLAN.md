@@ -18,7 +18,7 @@ The user will provide exact prompts listed below to initiate each stage. Mark st
   - **Prompt:** *"Execute Stage 1.2: Polish the scan finding outputs. Ensure every vulnerability card cleanly displays 'Evidence' and exact file/source location. Tighten the AI remediation route so the output provides highly concrete code fixes."*
   - **Action Items:** Update scan report UI, adjust AI remediation prompt/logic, refine technical brief.
 
-- **[ ] Stage 1.3: Trust Flow, Onboarding, & Billing**
+- **[x] Stage 1.3: Trust Flow, Onboarding, & Billing**
   - **Prompt:** *"Execute Stage 1.3: Finalize the trust flow. Perfect the Dashboard empty states, ensure the 'Security' and 'Pricing' pages are flawless for enterprise trust, and finalize Stripe billing webhooks so we can accept payments."*
   - **Action Items:** Empty state components, Stripe checkout session/webhook integration, UI polish.
 
