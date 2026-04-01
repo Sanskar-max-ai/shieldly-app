@@ -14,7 +14,7 @@ The user will provide exact prompts listed below to initiate each stage. Mark st
   - **Prompt:** *"Execute Stage 1.1: Fix the Vercel branch. Downgrade framer-motion to resolve the motion-dom error, confirm there are no disabled Print buttons in the Technical Brief, run a local webpack build check, and push it to production."*
   - **Action Items:** Modify package.json, verify local build, push to main, test live URL.
   
-- **[ ] Stage 1.2: Evidence & Remediation Engine**
+- **[x] Stage 1.2: Evidence & Remediation Engine**
   - **Prompt:** *"Execute Stage 1.2: Polish the scan finding outputs. Ensure every vulnerability card cleanly displays 'Evidence' and exact file/source location. Tighten the AI remediation route so the output provides highly concrete code fixes."*
   - **Action Items:** Update scan report UI, adjust AI remediation prompt/logic, refine technical brief.
 

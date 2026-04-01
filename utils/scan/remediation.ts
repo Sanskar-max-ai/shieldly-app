@@ -140,11 +140,17 @@ export function generateFixPayload(issue: Pick<ScanIssue, 'testName' | 'severity
     }
   }
 
+  const isAiReport = name.includes('llm') || name.includes('prompt') || name.includes('model') || name.includes('jailbreak') || name.includes('exfiltration')
+  
+  const snippet = Array.isArray(issue.aiFixSteps) && issue.aiFixSteps.length > 0
+    ? issue.aiFixSteps.map((step, i) => `// Step ${i + 1}\n${step}`).join('\n\n')
+    : 'Review your source code and apply the recommended security patch.'
+
   return {
-    type: 'MANUAL_GUIDE',
-    file: 'Documentation',
-    snippet: 'Consult the specific fix steps listed in the audit report and apply the smallest safe change.',
-    description: issue.aiExplanation || 'A custom security patch is required for this architecture.',
+    type: isAiReport ? 'AI_SYSTEM_PROMPT' : 'SOURCE_CODE_PATCH',
+    file: isAiReport ? 'System Instructions' : 'Source Code',
+    snippet,
+    description: issue.aiExplanation || 'A custom security patch is required to mitigate this vulnerability.',
     nextSteps,
     evidence,
     source,

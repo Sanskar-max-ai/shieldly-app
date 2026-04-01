@@ -141,14 +141,19 @@ export default async function TechnicalBriefPage({ params }: { params: Promise<{
                       {issue.description}
                     </p>
                     <div className="flex flex-wrap gap-2 text-[10px] font-black uppercase tracking-[0.2em] mb-5">
-                      <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                        Source: {getFindingSourceLabel(issue.details?.findingSource)}
+                      <span className="px-2.5 py-1 rounded-sm bg-slate-100 text-slate-600 border border-slate-200">
+                        SOURCE: {getFindingSourceLabel(issue.details?.findingSource)}
                       </span>
-                      {getEvidenceLines(issue.details).slice(0, 2).map((line, index) => (
-                        <span key={index} className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          {line}
-                        </span>
-                      ))}
+                      {getEvidenceLines(issue.details).length > 0 && (
+                        <div className="flex flex-wrap gap-2 items-center">
+                          <span className="text-slate-400">EVIDENCE:</span>
+                          {getEvidenceLines(issue.details).slice(0, 3).map((line, index) => (
+                            <span key={index} className="px-2 py-1 rounded-sm bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono lowercase tracking-normal">
+                              {line}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     
                     <div className="grid grid-cols-2 gap-8 py-6 border-t border-slate-100 italic font-medium">
