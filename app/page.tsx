@@ -280,7 +280,7 @@ export default function HomePage() {
               for AI-enabled SaaS teams.
             </p>
             <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-              <Link href="/auth/signup" className="btn-primary px-7 py-4 text-sm uppercase tracking-[0.16em]">
+              <Link href="/free-scan" className="btn-primary px-7 py-4 text-sm uppercase tracking-[0.16em]">
                 Start Free Audit
               </Link>
               <Link href="/pricing" className="btn-secondary px-7 py-4 text-sm uppercase tracking-[0.16em]">

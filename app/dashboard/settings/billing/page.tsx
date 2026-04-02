@@ -33,12 +33,12 @@ export default function BillingPage() {
     getProfile()
   }, [])
 
-  if (loading) return <div className="animate-pulse p-20 text-center text-[var(--zynth-text)]">Finding billing info...</div>
+  if (loading) return <div className="animate-pulse p-20 text-center text-[var(--zynthsecure-text)]">Finding billing info...</div>
 
   const plans = [
-    { id: 'price_starter', name: 'Starter', price: '$19', features: ['25 scans/mo', '3 domains', 'PDF reports', 'Weekly emails'] },
-    { id: 'price_pro', name: 'Professional', price: '$49', features: ['Unlimited scans', '25 domains', 'AI Assistant', 'API Access'], highlight: true },
-    { id: 'price_agency', name: 'Agency', price: '$149', features: ['Unlimited everything', 'White-label PDF', 'Team accounts', 'Priority support'] },
+            { id: 'price_starter', name: 'Starter', price: '$19', features: ['25 scans/mo', '3 domains', 'PDF reports', 'Weekly monitoring emails'] },
+            { id: 'price_pro', name: 'Professional', price: '$49', features: ['Unlimited scans', '25 monitored domains', 'AI Security Guide', 'API Access'], highlight: true },
+            { id: 'price_agency', name: 'Agency', price: '$149', features: ['Unlimited everything', 'White-label PDF reports', 'Team accounts', 'Priority support'] },
   ]
 
   const handleCheckout = async (priceId: string, planName: string) => {
@@ -77,7 +77,7 @@ export default function BillingPage() {
           <CreditCard className="text-[var(--zynth-green)]" />
           Billing & Plans
         </h1>
-        <p className="text-sm leading-7 text-[var(--zynth-text)]">You are currently on the {profile?.plan || 'Free'} plan.</p>
+        <p className="text-sm leading-7 text-[var(--zynthsecure-text)]">You are currently on the {profile?.plan || 'Free'} plan.</p>
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">

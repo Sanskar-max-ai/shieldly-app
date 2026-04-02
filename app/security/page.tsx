@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { FileCheck2, Lock, Radar, ShieldCheck } from 'lucide-react'
 import PublicNav from '@/components/marketing/PublicNav'
 import PublicFooter from '@/components/marketing/PublicFooter'
+import CyberBackground from '@/components/ui/CyberBackground'
 
 const coverageAreas = [
   {
@@ -29,6 +30,7 @@ const coverageAreas = [
 export default function SecurityPage() {
   return (
     <div className="marketing-shell min-h-screen text-white">
+      <CyberBackground />
       <PublicNav />
 
       <main className="page-container py-16 md:py-24">

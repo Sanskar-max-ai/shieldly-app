@@ -4,7 +4,7 @@ import { useEffect, useState, use } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { usePostHog } from 'posthog-js/react'
-import { ArrowRight, Lock, Radar, Shield, ShieldAlert, Sparkles } from 'lucide-react'
+import { Lock, Radar, Shield, ShieldAlert } from 'lucide-react'
 import PublicNav from '@/components/marketing/PublicNav'
 import PublicFooter from '@/components/marketing/PublicFooter'
 import CyberBackground from '@/components/ui/CyberBackground'
@@ -55,6 +55,8 @@ export default function FreeScanPage({ searchParams }: { searchParams: Promise<{
       setLoadingMsg(messages[msgIndex])
     }, 2500)
 
+    const startTime = Date.now()
+
     const runScan = async () => {
       posthog?.capture('free_scan_started', { url: targetUrl })
       try {
@@ -67,12 +69,15 @@ export default function FreeScanPage({ searchParams }: { searchParams: Promise<{
         const data = await res.json()
         if (!res.ok) throw new Error(data.error || 'Failed to complete scan')
         
-        // Ensure the loading animation stays for at least 8 seconds for the WOW effect
+        // Ensure the loading animation runs for at least 8 seconds
+        const elapsed = Date.now() - startTime
+        const remaining = Math.max(0, 8000 - elapsed)
+
         setTimeout(() => {
           setResult(data)
           setLoading(false)
           clearInterval(interval)
-        }, Math.max(0, 8000 - 0 /* assuming immediate API return for now, but usually it takes a few secs */))
+        }, remaining)
 
       } catch (err: any) {
         setError(err.message)
