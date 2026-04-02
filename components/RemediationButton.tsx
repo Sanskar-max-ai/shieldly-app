@@ -26,14 +26,12 @@ type RemediationPayload = {
 }
 
 const REMEDIATION_STEPS = [
-  'Preparing remediation workflow...',
+  'Analyzing vulnerability context...',
   'Checking the current configuration state...',
-  'Generating a fix from the scan findings...',
+  'Generating a patch payload from the scan findings...',
   'Validating the patch structure...',
-  'Applying the remediation payload...',
-  'Refreshing the issue status...',
-  'Verifying the updated result...',
-  'Remediation flow completed.',
+  'Finalizing remediation instructions...',
+  'Patch payload generated.',
 ]
 
 export default function RemediationButton({ 
@@ -82,7 +80,7 @@ export default function RemediationButton({
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-[#00ff88] font-bold text-xs uppercase tracking-widest bg-[#00ff88]/10 px-3 py-1.5 rounded-lg border border-[#00ff88]/20">
           <CheckCircle size={14} />
-          Fixed by Zynth
+          Patch Generated
         </div>
         {remediation && (
           <div className="rounded-xl border border-white/10 bg-black/30 p-3 text-[11px] leading-relaxed text-white/80 max-w-sm">
@@ -114,7 +112,7 @@ export default function RemediationButton({
           className="flex items-center gap-2 bg-[#00ff88] text-black hover:bg-[#00e67a] px-4 py-2 rounded-lg font-black text-xs uppercase tracking-[0.12em] transition-all transform hover:scale-105 active:scale-95 shadow-[0_4px_20px_rgba(0,255,136,0.3)]"
         >
           <Zap size={14} fill="currentColor" />
-          Run Fix
+          Generate Patch
         </button>
         {error && (
           <div className="max-w-sm rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2 text-[11px] leading-relaxed text-red-100">
@@ -133,7 +131,7 @@ export default function RemediationButton({
               <X size={16} /> Close
             </button>
             <HackerTerminal 
-              title={`Running Remediation - ${testName}`}
+              title={`Generating Patch - ${testName}`}
               steps={REMEDIATION_STEPS}
               isRemediation={true}
               onComplete={() => {
