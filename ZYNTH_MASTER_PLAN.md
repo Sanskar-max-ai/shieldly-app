@@ -62,19 +62,28 @@ The user will provide exact prompts listed below to initiate each stage. Mark st
     - [x] 2. **Build Email utility (`utils/email.ts`)**: Create a typed `sendAlertEmail()` function wrapping the Resend SDK with a premium HTML template.
     - [x] 3. **Wire into CRON worker**: After `/api/cron/run-scan` saves results, fetch user email + Discord webhook URL, then call `sendAlertEmail()` and fire the Discord webhook if new critical/high issues are found.
     - [x] 4. **Build Notifications settings UI (`app/dashboard/settings/notifications/page.tsx`)**: Add a UI for users to enter and save their Discord webhook URL and toggle email alerts.
+  - **⏳ PENDING ENV VAR:** `RESEND_API_KEY` — must be added to Vercel before email alerts go live. Get from resend.com (free tier: 3,000 emails/month).
 
 ---
 
 ### [ ] Stage 4: The 100 to 1,000 Agency Scale
 *Goal: Bulk volume through B2B partnerships.*
 
-- **[ ] Stage 4.1: Agency White-Label**
+- **[x] Stage 4.1: Agency White-Label**
   - **Prompt:** *"Execute Stage 4.1: Build the Agency tier. Allow users to upload their own company logo and replace the Zynth branding on the PDF Technical Briefs so they can resell our reports to their clients."*
-  - **Action Items:** Add branding fields to settings/DB, modify PDF generator to accept dynamic logos and colors.
+  - **Action Items (Execution Plan):**
+    - [x] 1. **Branding Settings UI (`app/dashboard/settings/branding/page.tsx`)**: Build a page where Agency users can upload a logo (URL) and set a custom brand name/accent color.
+    - [x] 2. **Save to DB**: Persist `brand_name`, `brand_logo_url`, `brand_color` to the `profiles` table.
+    - [x] 3. **Inject into Technical Brief**: Modify `app/dashboard/scan/[id]/technical/page.tsx` to read the user's branding fields and render their logo/name instead of the Zynth logo.
+    - [x] 4. **Gate behind Agency plan**: Show a locked/upgrade prompt to non-Agency users.
 
 - **[ ] Stage 4.2: Team Seats / RBAC**
   - **Prompt:** *"Execute Stage 4.2: Build Team management. Allow a primary account owner to invite multiple developers with read-only or admin access to the dashboard."*
-  - **Action Items:** Supabase RLS policies for multi-tenant teams, invite email system, UI for team members.
+  - **Action Items (Execution Plan):**
+    - [ ] 1. **DB Schema**: Add a `team_members` table (`team_id`, `user_id`, `role: owner|admin|viewer`, `invited_email`, `status: pending|active`).
+    - [ ] 2. **Invite API (`/api/team/invite/route.ts`)**: Send invite emails via Resend, create pending team membership rows.
+    - [ ] 3. **Team Settings UI (`app/dashboard/settings/team/page.tsx`)**: Show current members, invite new ones by email, change roles.
+    - [ ] 4. **RLS Policies**: Update Supabase Row Level Security so team members can read (viewers) or write (admins) the owner's scans.
 
 ---
-**Current Status:** At the very beginning! We need the user to paste the **Stage 1.1** prompt.
+**Current Status:** Stage 3 complete. Starting **Stage 4: Agency Scale**. ⏳ Add `RESEND_API_KEY` to Vercel env vars before Stage 3.2 email alerts go live.
