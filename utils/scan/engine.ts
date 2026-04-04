@@ -40,7 +40,7 @@ export function calculateScore(issues: ScanIssue[]): number {
     if (issue.isFixed) continue
     
     // Stage 6: Red Team findings are weighted more heavily
-    const isRedTeam = issue.findingSource === 'external' && issue.testName.includes('Red Team')
+    const isRedTeam = issue.findingSource === 'red-team' && issue.testName.includes('Red Team')
     const multiplier = isRedTeam ? 1.5 : 1
 
     switch (issue.severity) {
@@ -62,7 +62,7 @@ function annotateIssue(issue: ScanIssue): ScanIssue {
   if (issue.testName.startsWith('Critical Vulnerability Found:')) {
     return {
       ...issue,
-      findingSource: 'external',
+      findingSource: 'sentinel',
       evidence: issue.evidence || ['Matched against a known vulnerability signature database'],
     }
   }
@@ -70,7 +70,7 @@ function annotateIssue(issue: ScanIssue): ScanIssue {
   if (issue.testName === 'SSL/TLS Grade F' || issue.testName === 'Weak SSL/TLS Configuration') {
     return {
       ...issue,
-      findingSource: 'external',
+      findingSource: 'sentinel',
       evidence: issue.evidence || ['SSL Labs analysis reported a weak certificate or TLS configuration'],
     }
   }
@@ -78,7 +78,7 @@ function annotateIssue(issue: ScanIssue): ScanIssue {
   if (issue.testName === 'SSL Certificate Expired' || issue.testName === 'SSL Certificate Expiring Soon') {
     return {
       ...issue,
-      findingSource: 'external',
+      findingSource: 'sentinel',
       evidence: issue.evidence || ['Certificate transparency lookup returned the certificate expiry information'],
     }
   }
@@ -526,7 +526,7 @@ export async function runFullScan(url: string, scanId: string = generateId(), ap
       aiExplanation: t.gradingExplanation,
       aiFixSteps: ['Apply Zynth Firewall Guardrails', 'Sanitize user inputs specifically for LLM context'],
       isFixed: false,
-      findingSource: 'external' as const,
+      findingSource: 'red-team' as const,
       evidence: [t.payload, t.targetResponse || 'N/A'],
       details: { 
         category: 'AI' as const, 
@@ -542,7 +542,7 @@ export async function runFullScan(url: string, scanId: string = generateId(), ap
       aiExplanation: t.gradingExplanation,
       aiFixSteps: ['Validate semantic state transitions', 'Enforce strict role-based access at the API layer'],
       isFixed: false,
-      findingSource: 'external' as const,
+      findingSource: 'red-team' as const,
       evidence: [t.payload, t.targetResponse || 'N/A'],
       details: {
         attackTrace: t.attackTrace

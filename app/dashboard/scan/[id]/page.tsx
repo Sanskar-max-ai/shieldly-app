@@ -34,7 +34,7 @@ type ScanIssueRecord = {
   auto_remediable?: boolean | null
   patch?: any | null
   details?: {
-    findingSource?: 'direct' | 'heuristic' | 'external'
+    findingSource?: 'direct' | 'heuristic' | 'pentest' | 'sentinel' | 'red-team'
     evidence?: string[]
     serverHeader?: string
     path?: string

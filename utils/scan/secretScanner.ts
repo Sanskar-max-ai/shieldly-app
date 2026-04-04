@@ -109,7 +109,7 @@ function findSecretsInContent(content: string, source: string): ScanIssue[] {
             'Check your usage logs for any unauthorized activity'
           ],
           isFixed: false,
-          findingSource: 'external',
+          findingSource: 'sentinel',
           evidence: [masked, `Found in: ${source}`]
         })
       }

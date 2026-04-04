@@ -14,7 +14,7 @@ type TechnicalIssue = {
   ai_explanation?: string | null
   ai_fix_steps?: string[] | null
   details?: {
-    findingSource?: 'direct' | 'heuristic' | 'external'
+    findingSource?: 'direct' | 'heuristic' | 'pentest' | 'sentinel' | 'red-team'
     evidence?: string[]
     serverHeader?: string
     path?: string
