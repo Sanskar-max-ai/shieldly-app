@@ -12,11 +12,11 @@ export function getFindingSourceLabel(source?: FindingSource | null): string {
     case 'direct':
       return 'Direct Observation'
     case 'heuristic':
-      return 'Heuristic / Derived'
+      return 'Heuristic Engine'
     case 'external':
-      return 'External Lookup'
+      return 'Sentinel Cluster'
     default:
-      return 'Unspecified'
+      return 'General Audit'
   }
 }
 
