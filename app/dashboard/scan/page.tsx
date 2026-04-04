@@ -40,10 +40,26 @@ export default function NewScanPage() {
   const [apiKey, setApiKey] = useState('')
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [isFinished, setIsFinished] = useState(false)
+  const [sentinelStatus, setSentinelStatus] = useState<'checking' | 'online' | 'offline'>('checking')
   
   const router = useRouter()
   const searchParams = useSearchParams()
   const activeSteps = scanType === 'web' ? WEB_SCAN_STEPS : AI_SCAN_STEPS
+
+  useEffect(() => {
+    async function checkStatus() {
+      try {
+        const res = await fetch('/api/scan/status')
+        const data = await res.json()
+        setSentinelStatus(data.status === 'online' ? 'online' : 'offline')
+      } catch {
+        setSentinelStatus('offline')
+      }
+    }
+    checkStatus()
+    const interval = setInterval(checkStatus, 15000)
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     const presetUrl = searchParams.get('url')
@@ -104,8 +120,29 @@ export default function NewScanPage() {
   return (
     <div className="max-w-5xl mx-auto py-4 animate-fade-up px-4">
       <div className="mb-8 rounded-[2rem] border border-white/8 bg-white/[0.03] p-7 shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
-        <div className="section-kicker">
-          <span>Run Scan</span>
+        <div className="flex items-center justify-between">
+           <div className="section-kicker">
+             <span>Run Scan</span>
+           </div>
+           
+           <div className="flex items-center gap-3">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-[#64748b]">Engine Status:</span>
+              <div className={`flex items-center gap-2 px-3 py-1 rounded-full border ${
+                sentinelStatus === 'online' 
+                  ? 'border-[#00ff88]/20 bg-[#00ff88]/5 text-[#00ff88]' 
+                  : sentinelStatus === 'offline' 
+                  ? 'border-red-500/20 bg-red-500/5 text-red-400' 
+                  : 'border-white/5 bg-white/5 text-[#64748b]'
+              }`}>
+                <div className={`h-1.5 w-1.5 rounded-full ${
+                  sentinelStatus === 'online' ? 'bg-[#00ff88] animate-pulse shadow-[0_0_8px_#00ff88]' : 
+                  sentinelStatus === 'offline' ? 'bg-red-500' : 'bg-gray-500'
+                }`} />
+                <span className="text-[10px] font-black uppercase tracking-[0.1em]">
+                  {sentinelStatus === 'online' ? 'SENTINEL_ONLINE' : sentinelStatus === 'offline' ? 'SENTINEL_OFFLINE' : 'CHECKING_LINK...'}
+                </span>
+              </div>
+           </div>
         </div>
         <h1 className="mt-5 text-3xl font-bold tracking-[-0.04em] text-white md:text-4xl">Start a new security scan</h1>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--zynth-text)] md:text-base">

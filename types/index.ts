@@ -11,7 +11,7 @@ export interface ScanIssue {
   testName: string
   severity: Severity
   description: string        // Raw technical description
-  findingSource?: 'direct' | 'heuristic' | 'external'
+  findingSource?: 'direct' | 'heuristic' | 'pentest' | 'sentinel' | 'red-team'
   evidence?: string[]
   aiExplanation?: string     // Plain-English AI explanation
   aiFixSteps?: string[]      // Step-by-step fix instructions

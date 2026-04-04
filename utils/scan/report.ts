@@ -1,4 +1,4 @@
-export type FindingSource = 'direct' | 'heuristic' | 'external'
+export type FindingSource = 'direct' | 'heuristic' | 'pentest' | 'sentinel' | 'red-team'
 
 type IssueDetails = {
   findingSource?: FindingSource
@@ -9,14 +9,16 @@ type IssueDetails = {
 
 export function getFindingSourceLabel(source?: FindingSource | null): string {
   switch (source) {
-    case 'direct':
-      return 'Direct Observation'
+    case 'sentinel':
+      return 'Sentinel Cluster (Nmap/Nuclei)'
+    case 'pentest':
+      return 'Shieldly Pentest (Active Exploit)'
+    case 'red-team':
+      return 'AI Adversarial Red Team'
     case 'heuristic':
-      return 'Heuristic Engine'
-    case 'external':
-      return 'Sentinel Cluster'
+      return 'Heuristic Heuristic Engine'
     default:
-      return 'General Audit'
+      return 'Direct Observation'
   }
 }
 

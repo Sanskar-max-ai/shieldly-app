@@ -87,11 +87,11 @@ function annotateIssue(issue: ScanIssue): ScanIssue {
     ? [`Publicly accessible path found: ${String(issue.details.path)}`]
     : [`Observed during a live scan of the target application or infrastructure`]
 
-  const shouldAnnotateSource = !issue.findingSource || issue.findingSource === 'direct'
+  const shouldAnnotateSource = !issue.findingSource || issue.findingSource === 'direct' || issue.findingSource === 'heuristic'
   
   return {
     ...issue,
-    findingSource: shouldAnnotateSource ? 'direct' as const : issue.findingSource,
+    findingSource: shouldAnnotateSource ? 'heuristic' as const : issue.findingSource,
     evidence: issue.evidence || directEvidence,
   }
 }

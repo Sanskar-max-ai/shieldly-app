@@ -35,7 +35,7 @@ export async function runRemotePentest(target: string): Promise<ScanIssue[]> {
     }
 
     const data = await res.json() as { findings: ScanIssue[] };
-    return (data.findings || []).map(f => ({ ...f, findingSource: 'external' }));
+    return (data.findings || []).map(f => ({ ...f, findingSource: 'sentinel' }));
   } catch (err) {
     console.error('[REMOTE_WORKER] Failed to contact scan worker cluster:', err);
     return [];
